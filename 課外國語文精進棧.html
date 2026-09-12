@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>每日國文課外充電棧 - 每日字音字形與國學精進庫</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Noto Serif TC (Main Academic Serif) & Noto Sans TC -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&family=Noto+Serif+TC:wght@600;700;900&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Noto Sans TC"', 'sans-serif'],
+            serif: ['"Noto Serif TC"', 'serif'],
+            calligraphy: ['"Ma Shan Zheng"', 'serif'],
+          },
+          colors: {
+            paper: {
+              50: '#fdfbf7',
+              100: '#f7f3eb',
+              200: '#eee6d8',
+              300: '#decbb0',
+            },
+            ink: {
+              700: '#3a352f',
+              800: '#2b2621',
+              900: '#1d1915',
+            },
+            bamboo: {
+              50: '#f2f8f4',
+              100: '#e1efe6',
+              600: '#366d52',
+              700: '#27523d',
+              800: '#1c3d2d',
+            },
+            vermilion: {
+              50: '#fdf3f2',
+              100: '#fae3e1',
+              600: '#c0392b',
+              700: '#a32f22',
+            },
+            amberwood: {
+              50: '#fcf8f0',
+              600: '#ab702e',
+              700: '#8c5920',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { -webkit-tap-highlight-color: transparent; scroll-behavior: smooth; }
+    body { background-color: #f7f3eb; color: #2b2621; font-family: 'Noto Sans TC', sans-serif; }
+    .font-chinese-serif { font-family: 'Noto Serif TC', serif; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .tap-scale { transition: transform 0.12s ease-out, background-color 0.15s ease; }
+    .tap-scale:active { transform: scale(0.98); }
+    .paper-card {
+      background-color: #fdfbf7;
+      border: 1px solid #e7ded0;
+      box-shadow: 0 4px 16px -2px rgba(58, 53, 47, 0.05);
+    }
+    .calligraphy-stamp {
+      border: 2px solid #c0392b;
+      color: #c0392b;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      display: inline-block;
+    }
+    .cal-day-cell { min-height: 54px; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-bamboo-100 selection:text-bamboo-800">
+
+  <!-- 書卷風頂部導航 -->
+  <header class="sticky top-0 z-40 bg-[#fdfbf7]/95 backdrop-blur-md border-b border-[#e7ded0] shadow-sm">
+    <div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-9 h-9 rounded-lg bg-bamboo-700 flex items-center justify-center text-paper-50 font-chinese-serif text-lg font-bold shadow-inner">
+          文
+        </div>
+        <div>
+          <h1 class="text-base md:text-lg font-bold text-ink-900 font-chinese-serif tracking-wide flex items-center gap-1.5">
+            課外國語文精進棧
+          </h1>
+          <p class="text-[11px] text-ink-700/70 font-medium">每日一組形音義 × 一則成語 × 一篇國學</p>
+        </div>
+      </div>
+      <div id="header-date-badge" class="text-xs font-semibold px-2.5 py-1 bg-paper-100 text-bamboo-700 rounded-full border border-paper-300">
+        載入中...
+      </div>
+    </div>
+    
+    <!-- 導航分頁 -->
+    <div class="max-w-3xl mx-auto px-4 pb-2">
+      <nav class="flex p-1 bg-[#ede6d8] rounded-xl space-x-1" aria-label="Tabs">
+        <button id="nav-btn-today" onclick="switchMainTab('today')" class="flex-1 py-2 text-xs md:text-sm font-bold rounded-lg transition-all text-bamboo-700 bg-[#fdfbf7] shadow-sm flex items-center justify-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+          <span id="tab-today-title">今日研讀</span>
+        </button>
+        <button id="nav-btn-calendar" onclick="switchMainTab('calendar')" class="flex-1 py-2 text-xs md:text-sm font-medium rounded-lg transition-all text-ink-700 hover:text-ink-900 flex items-center justify-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+          歷期日曆
+        </button>
+        <button id="nav-btn-bank" onclick="switchMainTab('bank')" class="flex-1 py-2 text-xs md:text-sm font-medium rounded-lg transition-all text-ink-700 hover:text-ink-900 flex items-center justify-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          全庫專題
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- 主內容容器 -->
+  <main class="flex-1 max-w-3xl w-full mx-auto p-4 md:p-6 space-y-6">
+
+    <!-- ========== 視圖 1: 學習專區 (先研讀後測驗) ========== -->
+    <div id="view-today" class="space-y-6">
+      
+      <!-- 日期與主題橫幅 (溫潤竹簡書卷色) -->
+      <div class="bg-gradient-to-r from-bamboo-700 via-bamboo-600 to-[#315f48] text-[#fdfbf7] rounded-2xl p-5 md:p-6 shadow-md relative overflow-hidden border border-bamboo-800">
+        <div class="relative z-10 space-y-2">
+          <div class="flex items-center gap-2">
+            <span id="current-view-tag" class="px-2.5 py-0.5 bg-paper-50/15 text-[#fdfbf7] rounded-md text-xs font-semibold backdrop-blur-sm border border-white/20">今日精選</span>
+            <span id="current-view-date-str" class="text-xs text-bamboo-100 font-medium">2026年9月13日</span>
+            <span id="random-fallback-indicator" class="hidden text-[10px] px-2 py-0.5 bg-amberwood-600 text-white rounded font-medium">系統精選推薦</span>
+          </div>
+          <h2 id="current-view-theme" class="text-lg md:text-xl font-bold font-chinese-serif tracking-wide leading-tight">
+            載入專題中...
+          </h2>
+          <p class="text-xs md:text-sm text-bamboo-100/90 leading-relaxed pt-1">
+            仔細研讀下方表格的形音義對照與國學精要，研讀完畢後點擊底部按鈕展開隨堂測驗。
+          </p>
+        </div>
+      </div>
+
+      <!-- 區塊 A：字音字形 — 單組相近字／同音字形音義對照表 -->
+      <section class="paper-card rounded-2xl p-4 md:p-5 space-y-3">
+        <div class="flex items-center justify-between border-b border-[#ebdcc7] pb-3">
+          <div class="flex items-center gap-2">
+            <span class="w-1.5 h-4 bg-bamboo-700 rounded-full"></span>
+            <h3 class="text-sm md:text-base font-bold text-ink-900 font-chinese-serif">一、字音字形（單組形音義精析）</h3>
+          </div>
+          <span id="phonetic-group-tag" class="text-[11px] px-2 py-0.5 bg-bamboo-50 text-bamboo-700 rounded-md font-medium border border-bamboo-100">形近易混</span>
+        </div>
+
+        <div class="overflow-x-auto no-scrollbar rounded-xl border border-[#ebdcc7] bg-white">
+          <table class="w-full text-left text-xs md:text-sm">
+            <thead class="bg-[#f3ede1] text-ink-900 font-bold border-b border-[#ebdcc7]">
+              <tr>
+                <th class="p-2.5 md:p-3 w-14 text-center">字形</th>
+                <th class="p-2.5 md:p-3 w-24">標準注音</th>
+                <th class="p-2.5 md:p-3 w-28 text-vermilion-600">考點／易錯陷阱</th>
+                <th class="p-2.5 md:p-3">字義解析與典型詞例</th>
+              </tr>
+            </thead>
+            <tbody id="phonetic-table-body" class="divide-y divide-[#f1e8dc] text-ink-800">
+              <!-- 動態生成單組對照字 -->
+            </tbody>
+          </table>
+        </div>
+        <p class="text-[11px] text-ink-700/80 italic">💡 記憶關鍵：請特別觀察偏旁部首與讀音的關聯，避開「讀半邊」或「筆畫誤寫」。</p>
+      </section>
+
+      <!-- 區塊 B：每日成語深度精解表 (固定每日 1 則) -->
+      <section class="paper-card rounded-2xl p-4 md:p-5 space-y-3">
+        <div class="flex items-center justify-between border-b border-[#ebdcc7] pb-3">
+          <div class="flex items-center gap-2">
+            <span class="w-1.5 h-4 bg-vermilion-600 rounded-full"></span>
+            <h3 class="text-sm md:text-base font-bold text-ink-900 font-chinese-serif">二、今日成語深度解析（每日一則）</h3>
+          </div>
+          <span id="idiom-type-badge" class="calligraphy-stamp text-xs">易錯字形</span>
+        </div>
+
+        <div class="overflow-x-auto no-scrollbar rounded-xl border border-[#ebdcc7] bg-white">
+          <table class="w-full text-left text-xs md:text-sm">
+            <tbody id="idiom-table-body" class="divide-y divide-[#f1e8dc]">
+              <!-- 動態生成單則成語詳解 -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 區塊 C：國學常識精要對照表 (固定每日 1 主題) -->
+      <section class="paper-card rounded-2xl p-4 md:p-5 space-y-3">
+        <div class="flex items-center justify-between border-b border-[#ebdcc7] pb-3">
+          <div class="flex items-center gap-2">
+            <span class="w-1.5 h-4 bg-amberwood-600 rounded-full"></span>
+            <h3 class="text-sm md:text-base font-bold text-ink-900 font-chinese-serif">三、國學常識對照精粹</h3>
+          </div>
+          <span id="lit-topic-badge" class="text-[11px] px-2 py-0.5 bg-amberwood-50 text-amberwood-700 rounded-md font-medium border border-[#ebdcc7]">文化典籍</span>
+        </div>
+
+        <div class="mb-2">
+          <h4 id="lit-table-main-title" class="text-sm font-bold text-ink-900 font-chinese-serif">載入中...</h4>
+          <p id="lit-table-description" class="text-xs text-ink-700 mt-0.5 leading-relaxed">...</p>
+        </div>
+
+        <!-- 國學常識表格 -->
+        <div class="overflow-x-auto no-scrollbar rounded-xl border border-[#ebdcc7] bg-white">
+          <table class="w-full text-left text-xs md:text-sm" id="lit-content-table">
+            <thead id="lit-table-thead" class="bg-[#f3ede1] text-ink-900 font-bold border-b border-[#ebdcc7]">
+              <!-- JS 渲染表頭 -->
+            </thead>
+            <tbody id="lit-table-tbody" class="divide-y divide-[#f1e8dc] text-ink-800">
+              <!-- JS 渲染行 -->
+            </tbody>
+          </table>
+        </div>
+
+        <div id="lit-exam-tip-box" class="text-xs text-amberwood-700 bg-amberwood-50 p-3 rounded-xl border border-[#e6d6c2] font-medium leading-relaxed">
+          <!-- 考點速記 -->
+        </div>
+      </section>
+
+      <!-- 研讀完成 -> 觸發測驗按鈕 -->
+      <div class="pt-2 pb-6 text-center">
+        <button onclick="openExamModal()" class="tap-scale w-full py-4 px-6 rounded-xl bg-gradient-to-r from-vermilion-600 to-vermilion-700 hover:from-vermilion-700 hover:to-vermilion-800 text-white font-bold text-sm md:text-base shadow-md flex items-center justify-center gap-2">
+          <span>📜 我研讀完畢，開始今日實戰評量</span>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- ========== 視圖 2: 歷期存檔（日曆式呈現） ========== -->
+    <div id="view-calendar" class="hidden space-y-5">
+      <div class="paper-card rounded-2xl p-5 space-y-4">
+        
+        <!-- 月份控制器 -->
+        <div class="flex items-center justify-between border-b border-[#ebdcc7] pb-3">
+          <div>
+            <h3 id="cal-month-header" class="text-base md:text-lg font-bold text-ink-900 font-chinese-serif">2026年 9月</h3>
+            <p class="text-xs text-ink-700">自動對齊系統日期，僅開放今日與往期已解鎖之研讀主題。</p>
+          </div>
+          <div class="flex items-center space-x-1.5">
+            <button onclick="changeCalendarMonth(-1)" class="p-2 rounded-lg hover:bg-paper-100 text-ink-700 tap-scale" title="上一月">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+            </button>
+            <button onclick="jumpToCurrentMonth()" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-bamboo-50 text-bamboo-700 border border-bamboo-100 tap-scale">
+              今天
+            </button>
+            <button onclick="changeCalendarMonth(1)" class="p-2 rounded-lg hover:bg-paper-100 text-ink-700 tap-scale" title="下一月">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- 星期表頭 -->
+        <div class="grid grid-cols-7 gap-1 text-center text-xs font-bold text-ink-700">
+          <div class="py-1 text-vermilion-600">日</div>
+          <div class="py-1">一</div>
+          <div class="py-1">二</div>
+          <div class="py-1">三</div>
+          <div class="py-1">四</div>
+          <div class="py-1">五</div>
+          <div class="py-1 text-bamboo-700">六</div>
+        </div>
+
+        <!-- 日期網格 -->
+        <div id="calendar-days-grid" class="grid grid-cols-7 gap-1.5 text-xs">
+          <!-- 由 JS 動態生成月份網格 -->
+        </div>
+
+        <!-- 圖例說明 -->
+        <div class="flex items-center justify-center gap-4 pt-3 border-t border-[#ebdcc7] text-[11px] text-ink-700">
+          <div class="flex items-center gap-1.5">
+            <span class="w-3 h-3 rounded bg-bamboo-700"></span>
+            <span>今日</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="w-3 h-3 rounded bg-white border border-[#ebdcc7]"></span>
+            <span>往期已解鎖（點擊研讀）</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="w-3 h-3 rounded bg-[#eee6d8] border border-[#d9ccb8] text-ink-700 flex items-center justify-center text-[9px]">🔒</span>
+            <span>未來日期（未解鎖）</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== 視圖 3: 全庫主題檢索與專題複習 ========== -->
+    <div id="view-bank" class="hidden space-y-5">
+      <div class="paper-card rounded-2xl p-5 space-y-4">
+        <div>
+          <h3 class="text-base font-bold text-ink-900 font-chinese-serif">主題專項複習與字詞全檢索</h3>
+          <p class="text-xs text-ink-700 mt-0.5">分類收錄歷期形音義辨正組、單則成語與國學精粹，考前可針對弱項密集複習。</p>
+        </div>
+
+        <!-- 搜尋框 -->
+        <div class="relative">
+          <input 
+            type="text" 
+            id="bank-search-input" 
+            oninput="handleSearchChange()"
+            placeholder="搜尋字詞、注音、成語、年齡借代、題辭（例：鶩、弱冠、重陽、脛）..." 
+            class="w-full pl-9 pr-4 py-2.5 bg-white border border-[#ebdcc7] rounded-xl text-xs md:text-sm text-ink-900 placeholder-ink-700/40 focus:outline-none focus:ring-2 focus:ring-bamboo-600 transition-all"
+          />
+          <svg class="w-4 h-4 text-ink-700/50 absolute left-3 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </div>
+
+        <!-- 主題篩選膠囊按鈕 -->
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 text-xs">
+          <button onclick="filterBankCategory('ALL')" class="category-pill whitespace-nowrap px-3 py-1.5 rounded-lg font-medium transition-colors bg-bamboo-700 text-white shadow-sm" data-cat="ALL">
+            全部內容 (<span id="count-all">0</span>)
+          </button>
+          <button onclick="filterBankCategory('PHONETIC')" class="category-pill whitespace-nowrap px-3 py-1.5 rounded-lg font-medium transition-colors bg-[#ebdcc7] text-ink-800 hover:bg-[#decbb0]" data-cat="PHONETIC">
+            🔤 形音義單組
+          </button>
+          <button onclick="filterBankCategory('IDIOM')" class="category-pill whitespace-nowrap px-3 py-1.5 rounded-lg font-medium transition-colors bg-[#ebdcc7] text-ink-800 hover:bg-[#decbb0]" data-cat="IDIOM">
+            📚 每日成語精解
+          </button>
+          <button onclick="filterBankCategory('LIT')" class="category-pill whitespace-nowrap px-3 py-1.5 rounded-lg font-medium transition-colors bg-[#ebdcc7] text-ink-800 hover:bg-[#decbb0]" data-cat="LIT">
+            🏛️ 國學常識專題
+          </button>
+        </div>
+      </div>
+
+      <!-- 搜尋結果清單 -->
+      <div id="bank-results-container" class="space-y-3.5">
+        <!-- JS 動態生成 -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- 獨立隨堂測驗視窗 (Modal) -->
+  <div id="exam-modal" class="fixed inset-0 z-50 bg-ink-900/60 backdrop-blur-sm hidden flex items-center justify-center p-3 md:p-4">
+    <div class="paper-card w-full max-w-xl rounded-2xl p-5 md:p-6 shadow-2xl flex flex-col max-h-[92vh] overflow-y-auto">
+      
+      <!-- 測驗標頭 -->
+      <div class="flex items-center justify-between border-b border-[#ebdcc7] pb-3">
+        <div>
+          <span id="modal-exam-date" class="text-[11px] font-bold text-vermilion-600 bg-vermilion-50 px-2 py-0.5 rounded border border-vermilion-100">
+            2026-09-13
+          </span>
+          <h3 class="text-base md:text-lg font-bold text-ink-900 font-chinese-serif mt-1">隨堂成果評量</h3>
+        </div>
+        <button onclick="closeExamModal()" class="w-8 h-8 rounded-full bg-[#ebdcc7]/60 hover:bg-[#ebdcc7] text-ink-700 flex items-center justify-center text-sm font-bold tap-scale" title="關閉">
+          ✕
+        </button>
+      </div>
+
+      <!-- 測驗題目進行中區塊 -->
+      <div id="exam-active-panel" class="py-4 space-y-4 flex-1">
+        <div class="flex items-center justify-between">
+          <span id="exam-type-badge" class="px-2 py-0.5 text-xs font-bold rounded-md bg-bamboo-50 text-bamboo-700 border border-bamboo-100">
+            字音字形
+          </span>
+          <span id="exam-counter" class="text-xs font-bold text-ink-700">第 1 / 4 題</span>
+        </div>
+
+        <h4 id="exam-stem" class="text-sm md:text-base font-semibold text-ink-900 leading-relaxed">
+          題目載入中...
+        </h4>
+
+        <!-- 選項按鈕 -->
+        <div id="exam-options-list" class="space-y-2.5 pt-1">
+          <!-- JS 動態生成選項 -->
+        </div>
+
+        <!-- 即時解析 -->
+        <div id="exam-exp-box" class="hidden rounded-xl bg-white border-l-4 border-bamboo-700 p-3.5 text-xs md:text-sm text-ink-800 space-y-1 shadow-sm">
+          <div class="font-bold text-bamboo-800">💡 正解與考點精析</div>
+          <div id="exam-exp-text" class="text-ink-700 leading-relaxed"></div>
+        </div>
+
+        <!-- 下一題按鈕 -->
+        <div id="exam-nav-bar" class="hidden pt-3 flex items-center justify-between border-t border-[#ebdcc7]">
+          <span id="exam-feedback-hint" class="text-xs font-medium"></span>
+          <button id="exam-next-btn" onclick="nextExamQuestion()" class="tap-scale px-5 py-2 bg-bamboo-700 hover:bg-bamboo-800 text-white rounded-xl text-xs md:text-sm font-semibold shadow-sm flex items-center gap-1.5">
+            <span>下一題</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- 結算成績卡片 (標註受測日期) -->
+      <div id="exam-score-panel" class="hidden py-6 text-center space-y-4">
+        <div class="w-16 h-16 bg-bamboo-50 text-bamboo-700 border border-bamboo-200 rounded-full flex items-center justify-center mx-auto text-2xl font-bold font-chinese-serif">
+          評
+        </div>
+        <div>
+          <div class="text-xs font-bold text-vermilion-600" id="score-tested-date-label">2026年9月13日 每日評量</div>
+          <h3 class="text-lg md:text-xl font-bold text-ink-900 font-chinese-serif mt-1">恭喜完成本次實戰驗收！</h3>
+          <p id="score-summary-text" class="text-xs md:text-sm text-ink-700 mt-1">答對 4 / 4 題</p>
+        </div>
+        <div class="pt-2 flex flex-wrap justify-center gap-3">
+          <button onclick="restartExam()" class="tap-scale px-4 py-2 border border-[#ebdcc7] text-ink-800 hover:bg-paper-100 rounded-xl text-xs md:text-sm font-medium">
+            🔄 重新測驗本回
+          </button>
+          <button onclick="closeExamModal()" class="tap-scale px-4 py-2 bg-bamboo-700 text-white rounded-xl text-xs md:text-sm font-medium shadow-sm">
+            返回查看學習表格
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 提示 Toast -->
+  <div id="toast-box" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-ink-900/90 backdrop-blur-sm text-paper-50 px-4 py-2.5 rounded-xl text-xs font-medium shadow-xl opacity-0 pointer-events-none transition-opacity duration-200 flex items-center gap-2">
+    <span id="toast-icon">ℹ️</span>
+    <span id="toast-message">通知訊息</span>
+  </div>
+
+  <script>
+    /* ====================================================================
+       一、核心資料庫：改採不容易混淆出錯的日期編號（如 p20260913, i20260913）
+       - POOL_PHONETICS: 每日僅聚焦「一組」極易混淆的 2~3 個相近或同音字形音義
+       - POOL_IDIOMS: 每日「一則」成語深度解析
+       - POOL_LIT: 每日「一項」國學常識專題對照表格
+       ==================================================================== */
+
+    // 1. 字音字形：聚焦單組相近或同音字形音義
+    const POOL_PHONETICS = [
+      {
+        id: "p20260913",
+        title: "「鶩」與「騖」字形字音字義辨析",
+        pairLabel: "鶩 (鳥部) vs 騖 (馬部)",
+        items: [
+          {
+            char: "鶩",
+            pinyin: "ㄨˋ",
+            wrong: "容易誤寫為馬部「騖」",
+            meaning: "野鴨。從鳥部。",
+            sample: "趨之若鶩（比喻眾人爭相追逐或盲目跟從，像野鴨成群搶食）。"
+          },
+          {
+            char: "騖",
+            pinyin: "ㄨˋ",
+            wrong: "容易誤寫為鳥部「鶩」",
+            meaning: "馬奔馳、向外馳求。從馬部。",
+            sample: "心無旁騖（心思專一，不向外馳散）；好高騖遠（追求過高不切實際的目標）。"
+          }
+        ],
+        quiz: {
+          type: "字形字義辨析",
+          q: "下列文句「」中的字詞用字，何者『完全正確無誤』？",
+          options: [
+            "這部新上市的手機引發消費者趨之若「騖」爭相排隊搶購",
+            "求學應腳踏實地，切忌好高「鶩」遠以致一事無成",
+            "他在圖書館中專心致志，真正做到了心無旁「騖」",
+            "群鴨在湖邊嬉戲，群「騖」齊飛的景象相當壯麗"
+          ],
+          ans: 2,
+          exp: "心無旁「騖」（馬部，奔馳馳求之意）完全正確。其餘修正：趨之若「鶩」（鳥部）、好高「騖」遠（馬部）、群「鶩」（鴨子，鳥部）。"
+        }
+      },
+      {
+        id: "p20260914",
+        title: "「暄」與「喧」字形字義辨析",
+        pairLabel: "暄 (日部) vs 喧 (口部)",
+        items: [
+          {
+            char: "暄",
+            pinyin: "ㄒㄨㄢ",
+            wrong: "切勿誤寫為「喧」或「宣」",
+            meaning: "溫暖之意。從日部。",
+            sample: "寒暄（見面時問候起居冷暖之客套話）；風和日暄（微風和煦，陽光溫暖）。"
+          },
+          {
+            char: "喧",
+            pinyin: "ㄒㄨㄢ",
+            wrong: "切勿誤寫為日部「暄」",
+            meaning: "聲音嘈雜、大聲吵鬧。從口部。",
+            sample: "喧嘩（聲音大而嘈雜）；喧賓奪主（客人的聲勢反過來壓過主人）。"
+          }
+        ],
+        quiz: {
+          type: "偏旁字形辨正",
+          q: "下列「」中字詞的使用，何者用字完全合乎字義規範？",
+          options: [
+            "兩位老友在站牌相逢，彼此親切寒「喧」了許久",
+            "考場內禁止大聲「暄」嘩，以維持安靜的作答環境",
+            "展覽會場內人聲鼎沸，「喧」囂聲此起彼落",
+            "今日氣候風和日「喧」，正適合全家人一同出遊"
+          ],
+          ans: 2,
+          exp: "「喧」囂（口部，吵鬧之意）完全正確。其餘修正：寒「暄」（日部，溫暖）、大聲「喧」嘩（口部）、風和日「暄」（日部）。"
+        }
+      },
+      {
+        id: "p20260915",
+        title: "「厲」與「勵」字形字義辨析",
+        pairLabel: "厲 (厂部) vs 勵 (力部)",
+        items: [
+          {
+            char: "厲",
+            pinyin: "ㄌㄧˋ",
+            wrong: "「再接再厲」常被誤寫為「勵」",
+            meaning: "磨刀石，引申為砥礪、磨練、嚴肅、猛烈。從厂部。",
+            sample: "再接再厲（接：公雞相鬥碰嘴；厲：磨刀嘴，比喻繼續努力奮發）；嚴厲。"
+          },
+          {
+            char: "勵",
+            pinyin: "ㄌㄧˋ",
+            wrong: "切勿與磨刀石之「厲」混用",
+            meaning: "勉力、振作、激勵。從力部。",
+            sample: "勉勵（互相鼓勵）；獎勵；勵精圖治（振作精神謀求國家治理健全）。"
+          }
+        ],
+        quiz: {
+          type: "常考成語錯字",
+          q: "下列文句中關於「厲／勵」二字的運用，何者『字形完全正確』？",
+          options: [
+            "模擬考雖然成績大幅進步，但他依然再接再「勵」不敢鬆懈",
+            "老師時常親切勉「厲」大家要保持主動探究的好習慣",
+            "全體國民應齊心協力，「勵」精圖治開創新局",
+            "他平日行事風格剛「勵」，對部屬要求十分嚴格"
+          ],
+          ans: 2,
+          exp: "「勵」精圖治（力部，振作勉力）完全正確。其餘修正：再接再「厲」（厂部，磨砺之意）、勉「勵」、剛「毅」或嚴「厲」。"
+        }
+      }
+    ];
+
+    // 2. 每日成語：每天精研 1 則
+    const POOL_IDIOMS = [
+      {
+        id: "i20260913",
+        title: "不脛而走",
+        pinyin: "ㄅㄨˋ ㄐㄧㄥˋ ㄦˊ ㄗㄡˇ",
+        tag: "字形與語境辨正",
+        tableRows: [
+          { label: "成語讀音", val: "ㄅㄨˋ ㄐㄧㄥˋ ㄦˊ ㄗㄡˇ" },
+          { label: "字詞析釋", val: "「脛」（ㄐㄧㄥˋ）：小腿（肉部）。「走」：古義為快跑奔馳。沒有生長小腿卻能飛快跑開。" },
+          { label: "核心語義", val: "比喻消息、言論或事態不用宣傳就極為迅速地傳播開來。" },
+          { label: "⚠️ 易錯警示", val: "脛為小腿，部首從肉（月），切勿望文生義寫成直「徑」或途「逕」。" },
+          { label: "生活例句", val: "李教授榮獲國際大獎的喜訊不脛而走，各界道賀電話絡繹不絕。" }
+        ],
+        quiz: {
+          type: "成語文意辨正",
+          q: "下列文句中對於「不脛而走」一詞的運用，何者『最合乎成語本義與語境』？",
+          options: [
+            "他在運動會百米短跑決賽中不脛而走，勇奪全校第一名",
+            "這件重大工程弊案的消息不脛而走，迅速引發社會各界的強烈關注",
+            "因為即將有颱風來襲，超市裡的生鮮蔬菜瞬間不脛而走被搶購一空",
+            "警方追緝多年的重刑犯昨夜趁隙不脛而走，目前正擴大搜捕"
+          ],
+          ans: 1,
+          exp: "「不脛而走」專指消息或言論傳播極為迅速。不可拿來形容快跑、逃逸或物品售罄。"
+        }
+      },
+      {
+        id: "i20260914",
+        title: "膾炙人口",
+        pinyin: "ㄎㄨㄞˋ ㄓˋ ㄖㄣˊ ㄎㄡˇ",
+        tag: "字形與典故運用",
+        tableRows: [
+          { label: "成語讀音", val: "ㄎㄨㄞˋ ㄓˋ ㄖㄣˊ ㄎㄡˇ" },
+          { label: "字詞析釋", val: "「膾」：細切的生肉；「炙」：烤熟的肉。切肉與烤肉都是受眾人喜愛的大眾美食。" },
+          { label: "核心語義", val: "比喻優美動人的詩文、藝術、歌曲或經典故事受到大眾普遍喜愛並廣為流傳傳誦。" },
+          { label: "⚠️ 易錯警示", val: "「炙」字上為肉（月）、下為火；切勿誤寫成針「灸」之灸（上為久）。" },
+          { label: "生活例句", val: "金庸筆下的武俠小說情節引人入勝，是華人文壇膾炙人口的長青經典。" }
+        ],
+        quiz: {
+          type: "成語望文生義辨正",
+          q: "下列文句對「膾炙人口」的使用，何者『完全合乎規範』？",
+          options: [
+            "這間牛排館的炭烤牛小排鮮嫩多汁，真是一道膾炙人口的佳餚",
+            "蘇軾的〈水調歌頭〉詞句清麗超逸，是千百年來膾炙人口的名篇",
+            "該名通緝要犯的作案手法極其凶殘，其惡劣行徑令人膾炙人口",
+            "這場大火燒毀了整排老舊廠房，災情慘烈實令人膾炙人口"
+          ],
+          ans: 1,
+          exp: "「膾炙人口」雖源於美食，但成語專門比喻「優秀的文學或藝術創作受到眾人欣賞傳誦」，不拿來形容食物本身好吃或負面災情。"
+        }
+      },
+      {
+        id: "i20260915",
+        title: "首當其衝",
+        pinyin: "ㄕㄡˇ ㄉㄤ ㄑㄧˊ ㄔㄨㄥ",
+        tag: "望文生義防雷",
+        tableRows: [
+          { label: "成語讀音", val: "ㄕㄡˇ ㄉㄤ ㄑㄧˊ ㄔㄨㄥ" },
+          { label: "字詞析釋", val: "「首」：最先。「衝」：交通要衝、要道。最先處在交通要道或要衝之上。" },
+          { label: "核心語義", val: "比喻最先受到攻擊，或最先遭受衝擊、災難與損失。" },
+          { label: "⚠️ 易錯警示", val: "大考高頻陷阱！絕不可誤用為「衝在第一名立功」或「爭取第一」。本詞專指承受災禍！" },
+          { label: "生活例句", val: "強颱即將由花東沿海登陸，首當其衝的東部農民紛紛加固防颱設施。" }
+        ],
+        quiz: {
+          type: "成語語義陷阱",
+          q: "下列文句中的「首當其衝」，何者用法『正確合乎規範』？",
+          options: [
+            "他在全國科展評比中表現優異，首當其衝奪下特優最高殊榮",
+            "面對原物料成本大幅飆漲，首當其衝的餐飲業紛紛研擬應對方案",
+            "為了爭取運動會大隊接力冠軍，全班同學都首當其衝認真練習",
+            "她是公司的頂尖業務員，首當其衝為團隊簽下億元訂單"
+          ],
+          ans: 1,
+          exp: "「首當其衝」是指最先承受災難或打擊；面對原物料漲價餐飲業首當其衝用法完全正確。"
+        }
+      }
+    ];
+
+    // 3. 每日國學常識：每日 1 組對照表格
+    const POOL_LIT = [
+      {
+        id: "l20260913",
+        title: "古代年齡借代與文化禮俗彙整表",
+        category: "年齡借代與人生禮俗",
+        description: "古人依照生理狀態、髮髻打扮或經史名句來代稱年齡，為各級升學考試高頻必考。",
+        columns: ["年齡代稱", "對應歲數", "特徵與典故說明", "關鍵考點標記"],
+        rows: [
+          ["垂髫", "幼童 (3~7歲)", "小兒不束髮，頭髮自然下垂", "陶淵明〈桃花源記〉：「黃髮垂髫，並怡然自樂」"],
+          ["及笄", "女子 15 歲", "女子滿十五歲許嫁，綰髮插上髮簪（笄，ㄐㄧ）", "古代女子成年禮之標誌"],
+          ["弱冠", "男子 20 歲", "男子滿二十行成年冠禮，體猶未壯故稱「弱」", "古代男子成年禮之標誌"],
+          ["而立", "30 歲", "語出《論語》：「三十而立」，指能立足於社會", "孔子自述修為語句"],
+          ["不惑", "40 歲", "《論語》：「四十而不惑」，對事理通達明辨", "中壯年之代稱"],
+          ["知命", "50 歲", "「知天命」之省稱，通達造化規律", "又稱「知非之年」（蘧伯玉五十知四十九年非）"],
+          ["花甲 / 耳順", "60 歲", "天干地支相配一輪六十年；孔子「六十而耳順」", "六十壽辰常稱「花甲大慶」"],
+          ["古稀", "70 歲", "杜甫詩：「酒債尋常行處有，人生七十古來稀」", "「古稀雙慶」為 140 歲"],
+          ["期頤", "100 歲", "期（ㄐㄧ），百年；頤，保養。百歲老人需全方位養護", "壽高德劭之極致"]
+        ],
+        tip: "男女成年禮關鍵年齡不同：女子十五歲「及笄」；男子二十歲「弱冠」。「花甲重開」指 120 歲。",
+        quiz: {
+          type: "國學年齡借代",
+          q: "小華今年剛滿「弱冠」之年，其祖父今年適逢「古稀」大壽。請問祖孫兩人年齡相差幾歲？",
+          options: ["40 歲", "45 歲", "50 歲", "55 歲"],
+          ans: 2,
+          exp: "弱冠為男子 20 歲，古稀（人生七十古來稀）為 70 歲，相差 70 - 20 = 50 歲。"
+        }
+      },
+      {
+        id: "l20260914",
+        title: "四大傳統節令關鍵意象速判表",
+        category: "節慶文化與詩詞判讀",
+        description: "古典詩詞常藉由物候、飲食或星象呈現傳統節慶，判讀時須牢記經典代表事物。",
+        columns: ["傳統節慶", "農曆日期", "代表性關鍵意象", "經典名句舉隅"],
+        rows: [
+          ["元宵 (上元)", "正月十五", "火樹銀花、花燈、元宵、湯圓、燈市", "辛棄疾：「東風夜放花千樹，更吹落，星如雨。」"],
+          ["端午 (端陽)", "五月初五", "艾草、菖蒲、雄黃酒、競渡 (龍舟)、汨羅", "文秀：「節分端午自誰言，萬古傳聞為屈原。」"],
+          ["中秋", "八月十五", "冰輪、玉兔、蟾蜍、嬋娟、桂魄、廣寒宮", "蘇軾：「但願人長久，千里共嬋娟。」"],
+          ["重陽", "九月初九", "茱萸、黃花 (菊花)、登高、重九", "王維：「遙知兄弟登高處，遍插茱萸少一人。」"]
+        ],
+        tip: "王維「遍插茱萸少一人」描繪九月九日重陽節登高辟邪；辛棄疾「東風夜放花千樹」描繪正月十五元宵燈節。",
+        quiz: {
+          type: "節令詩詞判讀",
+          q: "「獨在異鄉為異客，每逢佳節倍思親。遙知兄弟登高處，遍插茱萸少一人。」本詩所描繪的節日為何？",
+          options: ["清明節", "端午節", "中秋節", "重陽節"],
+          ans: 3,
+          exp: "「登高」與「遍插茱萸」為農曆九月九日重陽節的代表性習俗。"
+        }
+      },
+      {
+        id: "l20260915",
+        title: "漢字「六書」造字與用字體系表",
+        category: "文字學常識",
+        description: "東漢許慎《說文解字》歸納六書：前四者為造字法則，後兩者為文字使用與引申法則。",
+        columns: ["六書類別", "造字／用字", "判定特徵說明", "代表性文字範例"],
+        rows: [
+          ["象形", "造字法 (獨體)", "畫成其物，隨體詰詘。描摹實體形狀", "日、月、山、水、木、鳥、魚"],
+          ["指事", "造字法 (獨體)", "視而可識，察而見意。抽象符號或在象形字上加點", "上、下、本 (根部)、末 (梢部)、刃 (刀口)"],
+          ["會意", "造字法 (合體)", "比類合誼，以見指撝。合併兩個以上的字意組合新意", "休 (人倚木)、武 (止戈為武)、森、明"],
+          ["形聲", "造字法 (合體)", "以事為名，取譬相成。半表意符，半表聲符 (佔八成以上)", "江 (水意工聲)、河 (水意可聲)、松、鯉"],
+          ["轉注", "用字法", "建類一首，同意相受。同部首且意義互訓", "考、老互訓"],
+          ["假借", "用字法", "本無其字，依聲託事。借用同音字代表新概念", "莫 (本為暮，借為無)、自 (本為鼻，借為自己)"]
+        ],
+        tip: "「休、武」為典型會意字（人倚木休息、止戈為武）；「本、末、刃」為指事字，其指示點標明位置所在。",
+        quiz: {
+          type: "漢字六書辨析",
+          q: "「休」字由「人」依靠著「木」（樹）組合而成，合成歇息之意。在六書中屬於下列何者？",
+          options: ["象形", "指事", "會意", "形聲"],
+          ans: 2,
+          exp: "合併兩個獨體字的意涵以產生新字的造字法則，稱為「會意」字。"
+        }
+      }
+    ];
+
+    // 4. 指定日程排程表（使用清楚易讀的日期字串）
+    const SCHEDULED_DAYS = {
+      "2026-09-13": {
+        theme: "形近易混辨正：鶩與騖 × 古代年齡借代",
+        phoneticId: "p20260913",
+        idiomId: "i20260913",
+        litId: "l20260913"
+      },
+      "2026-09-14": {
+        theme: "字義辨正：暄與喧 × 傳統節令意象",
+        phoneticId: "p20260914",
+        idiomId: "i20260914",
+        litId: "l20260914"
+      },
+      "2026-09-15": {
+        theme: "成語錯字辨析：厲與勵 × 漢字六書體系",
+        phoneticId: "p20260915",
+        idiomId: "i20260915",
+        litId: "l20260915"
+      }
+    };
+
+    /* ====================================================================
+       二、狀態管理與日期運算
+       ==================================================================== */
+    const SYSTEM_TODAY = new Date();
+    const TODAY_Y = SYSTEM_TODAY.getFullYear();
+    const TODAY_M = SYSTEM_TODAY.getMonth();
+    const TODAY_D = SYSTEM_TODAY.getDate();
+
+    function formatISODate(y, m, d) {
+      const mm = String(m + 1).padStart(2, '0');
+      const dd = String(d).padStart(2, '0');
+      return `${y}-${mm}-${dd}`;
+    }
+
+    const TODAY_ISO_STRING = formatISODate(TODAY_Y, TODAY_M, TODAY_D);
+
+    let viewingDateISO = TODAY_ISO_STRING;
+    let calendarViewYear = TODAY_Y;
+    let calendarViewMonth = TODAY_M;
+
+    let currentDayData = null;
+    let examActiveQuestions = [];
+    let examCurrentIndex = 0;
+    let examCurrentScore = 0;
+    let examIsSubmitted = false;
+
+    let bankActiveCategory = 'ALL';
+    let bankSearchKeyword = '';
+
+    // 偽隨機數產生器
+    function createPseudoRandom(seedStr) {
+      let h = 0xdeadbeef;
+      for (let i = 0; i < seedStr.length; i++) {
+        h = Math.imul(h ^ seedStr.charCodeAt(i), 2654435761);
+      }
+      return function() {
+        h = Math.imul(h ^ (h >>> 16), 2246822507);
+        h ^= Math.imul(h ^ (h >>> 13), 3266489909);
+        return (h >>> 0) / 4294967296;
+      };
+    }
+
+    // 取得指定日期的內容（若無特定排程，以日期為 seed 分別從三庫隨機各抽 1 組）
+    function getDayContent(dateISO) {
+      let pObj, iObj, lObj, isRandom = false, theme = "";
+
+      if (SCHEDULED_DAYS[dateISO]) {
+        const item = SCHEDULED_DAYS[dateISO];
+        pObj = POOL_PHONETICS.find(p => p.id === item.phoneticId) || POOL_PHONETICS[0];
+        iObj = POOL_IDIOMS.find(i => i.id === item.idiomId) || POOL_IDIOMS[0];
+        lObj = POOL_LIT.find(l => l.id === item.litId) || POOL_LIT[0];
+        theme = item.theme;
+      } else {
+        isRandom = true;
+        const rng = createPseudoRandom(dateISO);
+        const pIdx = Math.floor(rng() * POOL_PHONETICS.length);
+        const iIdx = Math.floor(rng() * POOL_IDIOMS.length);
+        const lIdx = Math.floor(rng() * POOL_LIT.length);
+
+        pObj = POOL_PHONETICS[pIdx];
+        iObj = POOL_IDIOMS[iIdx];
+        lObj = POOL_LIT[lIdx];
+        theme = `${pObj.pairLabel} × ${iObj.title} × ${lObj.category}`;
+      }
+
+      // 組成該日的 4 道實戰題目
+      const qList = [
+        pObj.quiz,
+        {
+          type: "單組形音義延伸",
+          q: `下列文句中關於「${pObj.items[0].char}」字或「${pObj.items[1].char}」字的用字，何者『最合乎規範』？`,
+          options: [
+            `${pObj.items[0].sample}`,
+            `這件事切勿輕忽，千萬不可${pObj.items[0].wrong}`,
+            `平日學習時應戒驕戒躁，避免${pObj.items[1].wrong}`,
+            `以上文句用法均完全錯誤`
+          ],
+          ans: 0,
+          exp: `正解為 A。例句「${pObj.items[0].sample}」完全正確；請注意兩字之偏旁與義理辨正。`
+        },
+        iObj.quiz,
+        lObj.quiz
+      ];
+
+      return {
+        dateISO,
+        isRandom,
+        theme,
+        phonetic: pObj,
+        idiom: iObj,
+        lit: lObj,
+        questions: qList
+      };
+    }
+
+    function formatChineseDateString(isoStr) {
+      const parts = isoStr.split('-');
+      const y = parseInt(parts[0], 10);
+      const m = parseInt(parts[1], 10);
+      const d = parseInt(parts[2], 10);
+      const dayOfWeek = new Date(y, m - 1, d).getDay();
+      const weekArr = ["日", "一", "二", "三", "四", "五", "六"];
+      return `${y}年${m}月${d}日 (週${weekArr[dayOfWeek]})`;
+    }
+
+    // 渲染研讀頁面
+    function renderDayView(dateISO) {
+      viewingDateISO = dateISO;
+      currentDayData = getDayContent(dateISO);
+
+      const isToday = (dateISO === TODAY_ISO_STRING);
+
+      document.getElementById("header-date-badge").textContent = isToday ? `今日 · ${dateISO}` : `歷期 · ${dateISO}`;
+      document.getElementById("current-view-tag").textContent = isToday ? "今日精選" : "歷期回顧";
+      document.getElementById("current-view-date-str").textContent = formatChineseDateString(dateISO);
+      document.getElementById("current-view-theme").textContent = currentDayData.theme;
+      
+      const randomBadge = document.getElementById("random-fallback-indicator");
+      if (currentDayData.isRandom) {
+        randomBadge.classList.remove("hidden");
+      } else {
+        randomBadge.classList.add("hidden");
+      }
+
+      // 1. 渲染單組字音字形表格
+      document.getElementById("phonetic-group-tag").textContent = currentDayData.phonetic.pairLabel;
+      const phoneticTbody = document.getElementById("phonetic-table-body");
+      phoneticTbody.innerHTML = "";
+      currentDayData.phonetic.items.forEach(item => {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-paper-50 transition-colors";
+        tr.innerHTML = `
+          <td class="p-2.5 md:p-3 font-bold text-ink-900 font-chinese-serif text-base md:text-lg text-center border-r border-[#ebdcc7] bg-paper-50/50">${item.char}</td>
+          <td class="p-2.5 md:p-3 font-semibold text-bamboo-700 font-mono text-sm border-r border-[#ebdcc7]">${item.pinyin}</td>
+          <td class="p-2.5 md:p-3 text-vermilion-600 font-medium text-xs border-r border-[#ebdcc7]">${item.wrong}</td>
+          <td class="p-2.5 md:p-3 text-ink-800">
+            <div class="font-medium">${item.meaning}</div>
+            <div class="text-[11px] text-ink-700/70 mt-1">典範用例：${item.sample}</div>
+          </td>
+        `;
+        phoneticTbody.appendChild(tr);
+      });
+
+      // 2. 渲染每日成語表格 (單則)
+      document.getElementById("idiom-type-badge").textContent = currentDayData.idiom.tag;
+      const idiomTbody = document.getElementById("idiom-table-body");
+      idiomTbody.innerHTML = "";
+      currentDayData.idiom.tableRows.forEach(row => {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-paper-50 transition-colors";
+        const isHighlight = row.label.includes("警示") || row.label.includes("易錯");
+        tr.innerHTML = `
+          <td class="p-2.5 md:p-3 font-bold text-ink-900 bg-[#f9f5ed] w-24 md:w-28 border-r border-[#ebdcc7] ${isHighlight ? 'text-vermilion-700' : ''}">${row.label}</td>
+          <td class="p-2.5 md:p-3 text-ink-800 leading-relaxed ${isHighlight ? 'bg-vermilion-50/50 text-vermilion-700 font-medium' : ''}">${row.val}</td>
+        `;
+        idiomTbody.appendChild(tr);
+      });
+
+      // 3. 渲染國學常識表格
+      const lit = currentDayData.lit;
+      document.getElementById("lit-topic-badge").textContent = lit.category;
+      document.getElementById("lit-table-main-title").textContent = lit.title;
+      document.getElementById("lit-table-description").textContent = lit.description;
+      document.getElementById("lit-exam-tip-box").innerHTML = `💡 <strong>大考速記提示：</strong>${lit.tip}`;
+
+      const litThead = document.getElementById("lit-table-thead");
+      litThead.innerHTML = `
+        <tr>
+          ${lit.columns.map(col => `<th class="p-2.5 md:p-3 border-r border-[#ebdcc7] last:border-none">${col}</th>`).join('')}
+        </tr>
+      `;
+
+      const litTbody = document.getElementById("lit-table-tbody");
+      litTbody.innerHTML = "";
+      lit.rows.forEach((rowArr, idx) => {
+        const tr = document.createElement("tr");
+        tr.className = idx % 2 === 0 ? "bg-white hover:bg-paper-50" : "bg-paper-50/60 hover:bg-paper-100/70";
+        tr.innerHTML = rowArr.map((cellText, cellIdx) => {
+          const isFirst = cellIdx === 0;
+          return `<td class="p-2.5 md:p-3 ${isFirst ? 'font-bold text-ink-900 font-chinese-serif text-sm' : 'text-ink-800'} border-r border-[#ebdcc7] last:border-none leading-relaxed">${cellText}</td>`;
+        }).join('');
+        litTbody.appendChild(tr);
+      });
+    }
+
+    /* ====================================================================
+       三、獨立隨堂測驗模態視窗 (Modal) 邏輯
+       ==================================================================== */
+    function openExamModal() {
+      examActiveQuestions = currentDayData.questions;
+      examCurrentIndex = 0;
+      examCurrentScore = 0;
+      examIsSubmitted = false;
+
+      // 設定測驗標題日期
+      document.getElementById("modal-exam-date").textContent = `${viewingDateISO} 評量`;
+      document.getElementById("score-tested-date-label").textContent = `${formatChineseDateString(viewingDateISO)} 每日評量結算`;
+
+      document.getElementById("exam-active-panel").classList.remove("hidden");
+      document.getElementById("exam-score-panel").classList.add("hidden");
+
+      renderExamQuestion();
+      document.getElementById("exam-modal").classList.remove("hidden");
+    }
+
+    function closeExamModal() {
+      document.getElementById("exam-modal").classList.add("hidden");
+    }
+
+    function renderExamQuestion() {
+      examIsSubmitted = false;
+      const q = examActiveQuestions[examCurrentIndex];
+
+      document.getElementById("exam-counter").textContent = `第 ${examCurrentIndex + 1} / ${examActiveQuestions.length} 題`;
+      document.getElementById("exam-type-badge").textContent = q.type;
+      document.getElementById("exam-stem").textContent = q.q;
+
+      document.getElementById("exam-exp-box").classList.add("hidden");
+      document.getElementById("exam-nav-bar").classList.add("hidden");
+
+      const container = document.getElementById("exam-options-list");
+      container.innerHTML = "";
+
+      const alphabet = ['A', 'B', 'C', 'D'];
+      q.options.forEach((optText, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "w-full text-left p-3 rounded-xl border border-[#ebdcc7] bg-white hover:bg-paper-50 transition-all flex items-start gap-3 tap-scale group";
+        btn.onclick = () => selectExamAnswer(idx, btn);
+
+        btn.innerHTML = `
+          <span class="w-6 h-6 rounded bg-[#ede6d8] text-ink-800 text-xs font-bold flex items-center justify-center flex-shrink-0 group-hover:bg-bamboo-100 group-hover:text-bamboo-800 transition-colors">
+            ${alphabet[idx]}
+          </span>
+          <span class="text-xs md:text-sm text-ink-800 leading-normal pt-0.5 font-medium">${optText}</span>
+        `;
+        container.appendChild(btn);
+      });
+    }
+
+    function selectExamAnswer(selectedIdx, clickedBtn) {
+      if (examIsSubmitted) return;
+      examIsSubmitted = true;
+
+      const q = examActiveQuestions[examCurrentIndex];
+      const isCorrect = (selectedIdx === q.ans);
+      const allButtons = document.querySelectorAll("#exam-options-list button");
+
+      allButtons.forEach(b => b.disabled = true);
+
+      if (isCorrect) {
+        examCurrentScore++;
+        clickedBtn.className = "w-full text-left p-3 rounded-xl border bg-bamboo-50 border-bamboo-600 text-bamboo-800 ring-1 ring-bamboo-600 flex items-start gap-3";
+        clickedBtn.querySelector("span:first-child").className = "w-6 h-6 rounded bg-bamboo-700 text-white text-xs font-bold flex items-center justify-center flex-shrink-0";
+        showToast("答對了！概念清晰 👍", "🎉");
+      } else {
+        clickedBtn.className = "w-full text-left p-3 rounded-xl border bg-vermilion-50 border-vermilion-600 text-vermilion-800 flex items-start gap-3";
+        clickedBtn.querySelector("span:first-child").className = "w-6 h-6 rounded bg-vermilion-600 text-white text-xs font-bold flex items-center justify-center flex-shrink-0";
+
+        const correctBtn = allButtons[q.ans];
+        correctBtn.className = "w-full text-left p-3 rounded-xl border bg-bamboo-50 border-bamboo-600 text-bamboo-800 flex items-start gap-3";
+        correctBtn.querySelector("span:first-child").className = "w-6 h-6 rounded bg-bamboo-700 text-white text-xs font-bold flex items-center justify-center flex-shrink-0";
+        showToast("選錯囉！請詳讀考點解析 ✍️", "💡");
+      }
+
+      document.getElementById("exam-exp-text").textContent = q.exp;
+      document.getElementById("exam-exp-box").classList.remove("hidden");
+
+      const navBar = document.getElementById("exam-nav-bar");
+      const nextBtn = document.getElementById("exam-next-btn");
+      const feedbackText = document.getElementById("exam-feedback-hint");
+
+      navBar.classList.remove("hidden");
+      feedbackText.textContent = isCorrect ? "✅ 正確" : "❌ 未答對";
+
+      if (examCurrentIndex === examActiveQuestions.length - 1) {
+        nextBtn.innerHTML = `<span>結算成績</span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
+      } else {
+        nextBtn.innerHTML = `<span>下一題</span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>`;
+      }
+    }
+
+    function nextExamQuestion() {
+      if (examCurrentIndex < examActiveQuestions.length - 1) {
+        examCurrentIndex++;
+        renderExamQuestion();
+      } else {
+        finishExam();
+      }
+    }
+
+    function finishExam() {
+      document.getElementById("exam-active-panel").classList.add("hidden");
+      const scorePanel = document.getElementById("exam-score-panel");
+      scorePanel.classList.remove("hidden");
+
+      const pct = Math.round((examCurrentScore / examActiveQuestions.length) * 100);
+      let reviewNote = "表現十分優異，字詞形音義掌握扎實！";
+      if (pct < 75) reviewNote = "錯題別氣餒，可關閉本視窗重讀對照表格鞏固觀念。";
+
+      document.getElementById("score-summary-text").textContent = `本日測驗共 4 題，你答對了 ${examCurrentScore} 題（得分：${pct} 分）— ${reviewNote}`;
+    }
+
+    function restartExam() {
+      examCurrentIndex = 0;
+      examCurrentScore = 0;
+      document.getElementById("exam-score-panel").classList.add("hidden");
+      document.getElementById("exam-active-panel").classList.remove("hidden");
+      renderExamQuestion();
+    }
+
+    /* ====================================================================
+       四、歷期日曆視圖 (自動調取系統時間，僅開放往期)
+       ==================================================================== */
+    function renderCalendar() {
+      const headerTitle = document.getElementById("cal-month-header");
+      headerTitle.textContent = `${calendarViewYear}年 ${calendarViewMonth + 1}月`;
+
+      const daysGrid = document.getElementById("calendar-days-grid");
+      daysGrid.innerHTML = "";
+
+      const firstDayOfWeek = new Date(calendarViewYear, calendarViewMonth, 1).getDay();
+      const totalDaysInMonth = new Date(calendarViewYear, calendarViewMonth + 1, 0).getDate();
+
+      // 前置留白
+      for (let i = 0; i < firstDayOfWeek; i++) {
+        const blank = document.createElement("div");
+        blank.className = "cal-day-cell rounded-lg p-1 bg-transparent";
+        daysGrid.appendChild(blank);
+      }
+
+      const compareSystemToday = new Date(TODAY_Y, TODAY_M, TODAY_D);
+
+      // 當月每日
+      for (let day = 1; day <= totalDaysInMonth; day++) {
+        const cellDateISO = formatISODate(calendarViewYear, calendarViewMonth, day);
+        const cellDateObj = new Date(calendarViewYear, calendarViewMonth, day);
+        const isToday = (cellDateISO === TODAY_ISO_STRING);
+        const isFuture = (cellDateObj > compareSystemToday);
+        const isViewing = (cellDateISO === viewingDateISO);
+
+        const cell = document.createElement("div");
+        cell.className = "cal-day-cell rounded-xl p-1.5 flex flex-col justify-between transition-all border ";
+
+        if (isFuture) {
+          cell.className += "bg-[#ede6d8]/40 border-[#e0d3bf] text-ink-700/40 cursor-not-allowed select-none";
+          cell.innerHTML = `
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-xs text-ink-700/40">${day}</span>
+              <span class="text-[10px] text-ink-700/30">🔒</span>
+            </div>
+            <div class="text-[9px] text-ink-700/40 line-clamp-1">未到期</div>
+          `;
+        } else {
+          if (isToday) {
+            cell.className += "bg-bamboo-700 text-white border-bamboo-700 shadow-sm cursor-pointer tap-scale";
+          } else if (isViewing) {
+            cell.className += "bg-paper-100 border-bamboo-600 text-ink-900 ring-2 ring-bamboo-600 cursor-pointer tap-scale";
+          } else {
+            cell.className += "bg-white hover:bg-paper-50 border-[#ebdcc7] text-ink-900 cursor-pointer tap-scale hover:border-bamboo-600";
+          }
+
+          const dayInfo = getDayContent(cellDateISO);
+          const shortTheme = dayInfo.phonetic.pairLabel.split(' ')[0];
+
+          cell.onclick = () => {
+            renderDayView(cellDateISO);
+            switchMainTab('today');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            showToast(`已切換至 ${cellDateISO} 課外教材`, "📅");
+          };
+
+          cell.innerHTML = `
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-xs ${isToday ? 'text-white' : 'text-ink-900'}">${day}</span>
+              ${isToday ? '<span class="text-[9px] bg-white/20 px-1 py-0.2 rounded text-white font-bold">今日</span>' : '<span class="w-1.5 h-1.5 rounded-full bg-bamboo-600"></span>'}
+            </div>
+            <div class="text-[10px] leading-tight truncate ${isToday ? 'text-bamboo-100' : 'text-ink-700'} font-medium">
+              ${shortTheme}
+            </div>
+          `;
+        }
+
+        daysGrid.appendChild(cell);
+      }
+    }
+
+    function changeCalendarMonth(offset) {
+      calendarViewMonth += offset;
+      if (calendarViewMonth < 0) {
+        calendarViewMonth = 11;
+        calendarViewYear--;
+      } else if (calendarViewMonth > 11) {
+        calendarViewMonth = 0;
+        calendarViewYear++;
+      }
+      renderCalendar();
+    }
+
+    function jumpToCurrentMonth() {
+      calendarViewYear = TODAY_Y;
+      calendarViewMonth = TODAY_M;
+      renderCalendar();
+    }
+
+    /* ====================================================================
+       五、全庫主題檢索與專題卡片庫
+       ==================================================================== */
+    let ALL_THEMATIC_RESOURCES = [];
+
+    function buildGlobalResourceBank() {
+      ALL_THEMATIC_RESOURCES = [];
+
+      // 1. 單組形音義
+      POOL_PHONETICS.forEach(group => {
+        ALL_THEMATIC_RESOURCES.push({
+          category: "PHONETIC",
+          badge: "形音義組",
+          badgeStyle: "bg-bamboo-50 text-bamboo-700 border-bamboo-200",
+          title: group.title,
+          subtitle: group.pairLabel,
+          bodyHtml: `
+            <div class="space-y-2 text-xs md:text-sm">
+              <div class="overflow-x-auto rounded-lg border border-[#ebdcc7]">
+                <table class="w-full text-left text-xs">
+                  <thead class="bg-[#f3ede1] text-ink-900">
+                    <tr><th class="p-2">字</th><th class="p-2">注音</th><th class="p-2 text-vermilion-600">易錯點</th><th class="p-2">釋義與例詞</th></tr>
+                  </thead>
+                  <tbody class="divide-y divide-[#f1e8dc]">
+                    ${group.items.map(it => `
+                      <tr>
+                        <td class="p-2 font-bold font-chinese-serif text-sm">${it.char}</td>
+                        <td class="p-2 text-bamboo-700 font-mono">${it.pinyin}</td>
+                        <td class="p-2 text-vermilion-600">${it.wrong}</td>
+                        <td class="p-2">${it.meaning}（例：${it.sample}）</td>
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          `,
+          searchString: `${group.title} ${group.pairLabel} ${group.items.map(i => `${i.char} ${i.pinyin} ${i.wrong} ${i.meaning}`).join(' ')}`
+        });
+      });
+
+      // 2. 每日成語
+      POOL_IDIOMS.forEach(idiom => {
+        ALL_THEMATIC_RESOURCES.push({
+          category: "IDIOM",
+          badge: "成語精析",
+          badgeStyle: "bg-vermilion-50 text-vermilion-600 border-vermilion-100",
+          title: `${idiom.title}（${idiom.pinyin}）`,
+          subtitle: idiom.tag,
+          bodyHtml: `
+            <div class="space-y-1 text-xs md:text-sm">
+              ${idiom.tableRows.map(r => `<div><strong>${r.label}：</strong>${r.val}</div>`).join('')}
+            </div>
+          `,
+          searchString: `${idiom.title} ${idiom.pinyin} ${idiom.tag} ${idiom.tableRows.map(r => r.val).join(' ')}`
+        });
+      });
+
+      // 3. 國學常識
+      POOL_LIT.forEach(lit => {
+        ALL_THEMATIC_RESOURCES.push({
+          category: "LIT",
+          badge: "國學專題",
+          badgeStyle: "bg-amberwood-50 text-amberwood-700 border-amberwood-200",
+          title: lit.title,
+          subtitle: lit.category,
+          bodyHtml: `
+            <div class="space-y-2 text-xs md:text-sm">
+              <p class="text-ink-700">${lit.description}</p>
+              <div class="overflow-x-auto rounded-lg border border-[#ebdcc7]">
+                <table class="w-full text-left text-xs">
+                  <thead class="bg-[#f3ede1] text-ink-900">
+                    <tr>${lit.columns.map(c => `<th class="p-2">${c}</th>`).join('')}</tr>
+                  </thead>
+                  <tbody class="divide-y divide-[#f1e8dc]">
+                    ${lit.rows.map(r => `<tr>${r.map(cell => `<td class="p-2">${cell}</td>`).join('')}</tr>`).join('')}
+                  </tbody>
+                </table>
+              </div>
+              <div class="text-amberwood-700 text-xs font-medium">💡 ${lit.tip}</div>
+            </div>
+          `,
+          searchString: `${lit.title} ${lit.category} ${lit.description} ${lit.tip} ${lit.rows.map(r => r.join(' ')).join(' ')}`
+        });
+      });
+
+      document.getElementById("count-all").textContent = ALL_THEMATIC_RESOURCES.length;
+      renderThematicBankCards();
+    }
+
+    function filterBankCategory(cat) {
+      bankActiveCategory = cat;
+      document.querySelectorAll(".category-pill").forEach(btn => {
+        if (btn.dataset.cat === cat) {
+          btn.className = "category-pill whitespace-nowrap px-3 py-1.5 rounded-lg font-medium transition-colors bg-bamboo-700 text-white shadow-sm";
+        } else {
+          btn.className = "category-pill whitespace-nowrap px-3 py-1.5 rounded-lg font-medium transition-colors bg-[#ebdcc7] text-ink-800 hover:bg-[#decbb0]";
+        }
+      });
+      renderThematicBankCards();
+    }
+
+    function handleSearchChange() {
+      bankSearchKeyword = document.getElementById("bank-search-input").value.trim().toLowerCase();
+      renderThematicBankCards();
+    }
+
+    function renderThematicBankCards() {
+      const container = document.getElementById("bank-results-container");
+      container.innerHTML = "";
+
+      const filtered = ALL_THEMATIC_RESOURCES.filter(item => {
+        const matchesCat = (bankActiveCategory === 'ALL' || item.category === bankActiveCategory);
+        const matchesKeyword = (!bankSearchKeyword || item.searchString.toLowerCase().includes(bankSearchKeyword));
+        return matchesCat && matchesKeyword;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 paper-card rounded-2xl p-6">
+            <div class="text-3xl mb-2">📜</div>
+            <h4 class="text-sm font-bold text-ink-800">查無相關字詞或考點</h4>
+            <p class="text-xs text-ink-700/60 mt-1">請嘗試輸入其他字詞、成語或國學關鍵字搜尋</p>
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "paper-card rounded-2xl p-4 md:p-5 space-y-2.5 transition-all hover:border-bamboo-600";
+        card.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="px-2 py-0.5 rounded text-[11px] font-bold border ${item.badgeStyle}">
+              ${item.badge}
+            </span>
+            <span class="text-[11px] text-ink-700/60 font-medium">${item.subtitle}</span>
+          </div>
+          <h4 class="text-sm md:text-base font-bold text-ink-900 font-chinese-serif">${item.title}</h4>
+          <div class="text-ink-800">${item.bodyHtml}</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    /* ====================================================================
+       六、主要視圖分頁切換與 Toast
+       ==================================================================== */
+    function switchMainTab(tab) {
+      const viewToday = document.getElementById("view-today");
+      const viewCal = document.getElementById("view-calendar");
+      const viewBank = document.getElementById("view-bank");
+
+      const btnToday = document.getElementById("nav-btn-today");
+      const btnCal = document.getElementById("nav-btn-calendar");
+      const btnBank = document.getElementById("nav-btn-bank");
+
+      viewToday.classList.add("hidden");
+      viewCal.classList.add("hidden");
+      viewBank.classList.add("hidden");
+
+      const inactive = "flex-1 py-2 text-xs md:text-sm font-medium rounded-lg transition-all text-ink-700 hover:text-ink-900 flex items-center justify-center gap-1.5";
+      const active = "flex-1 py-2 text-xs md:text-sm font-bold rounded-lg transition-all text-bamboo-700 bg-[#fdfbf7] shadow-sm flex items-center justify-center gap-1.5";
+
+      btnToday.className = inactive;
+      btnCal.className = inactive;
+      btnBank.className = inactive;
+
+      if (tab === 'today') {
+        viewToday.classList.remove("hidden");
+        btnToday.className = active;
+      } else if (tab === 'calendar') {
+        viewCal.classList.remove("hidden");
+        btnCal.className = active;
+        renderCalendar();
+      } else if (tab === 'bank') {
+        viewBank.classList.remove("hidden");
+        btnBank.className = active;
+      }
+    }
+
+    let toastTimer = null;
+    function showToast(msg, icon = 'ℹ️') {
+      const toast = document.getElementById("toast-box");
+      document.getElementById("toast-message").textContent = msg;
+      document.getElementById("toast-icon").textContent = icon;
+
+      toast.classList.remove("opacity-0", "pointer-events-none");
+      toast.classList.add("opacity-100");
+
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove("opacity-100");
+        toast.classList.add("opacity-0", "pointer-events-none");
+      }, 2200);
+    }
+
+    // 啟動初始化
+    window.addEventListener('DOMContentLoaded', () => {
+      renderDayView(TODAY_ISO_STRING);
+      renderCalendar();
+      buildGlobalResourceBank();
+    });
+  </script>
+</body>
+</html>
