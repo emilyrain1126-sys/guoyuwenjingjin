@@ -16,409 +16,433 @@
     tailwind.config = {
       theme: {
         extend: {
+          colors: {
+            paper: { 50: '#fdfbf7', 100: '#f7f3eb', 200: '#eee6d8', 300: '#dfd2bd' },
+            ink: { 700: '#3c3a36', 800: '#2a2825', 900: '#1b1a18' },
+            bamboo: { 50: '#f0f5f2', 100: '#dbe8e1', 700: '#27523d', 800: '#1e402f' },
+            vermilion: { 50: '#fdf2f0', 100: '#fae2de', 600: '#c0392b', 700: '#a32f23' },
+            ochre: { 50: '#fbf7ee', 100: '#f4ebd4', 700: '#a26b25', 800: '#84541a' }
+          },
           fontFamily: {
             sans: ['"Noto Sans TC"', 'sans-serif'],
-            serif: ['"Noto Serif TC"', 'serif'],
-          },
-          colors: {
-            paper: {
-              50: '#fdfbf7',
-              100: '#f7f3eb',
-              200: '#eee6d8',
-              300: '#decbb0',
-            },
-            ink: {
-              700: '#3a352f',
-              800: '#2b2621',
-              900: '#1d1915',
-            },
-            bamboo: {
-              50: '#f2f8f4',
-              100: '#e1efe6',
-              600: '#366d52',
-              700: '#27523d',
-              800: '#1c3d2d',
-            },
-            vermilion: {
-              50: '#fdf3f2',
-              600: '#c0392b',
-              700: '#a32f22',
-            }
+            'chinese-serif': ['"Noto Serif TC"', 'serif']
           }
         }
       }
     }
   </script>
   <style>
-    html { -webkit-tap-highlight-color: transparent; }
-    body { background-color: #f7f3eb; color: #2b2621; }
-    .font-chinese-serif { font-family: 'Noto Serif TC', serif; }
-    .paper-card {
-      background-color: #fdfbf7;
-      border: 1px solid #e7ded0;
-      box-shadow: 0 4px 16px -2px rgba(58, 53, 47, 0.05);
+    body {
+      background-color: #f7f3eb;
+      color: #1b1a18;
+      font-family: 'Noto Sans TC', sans-serif;
     }
-    .tap-scale { transition: transform 0.12s ease-out, background-color 0.15s ease; }
-    .tap-scale:active { transform: scale(0.98); }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background-color: #dfd2bd;
+      border-radius: 9999px;
+    }
+    .tap-scale {
+      transition: transform 0.15s ease, background-color 0.15s ease;
+    }
+    .tap-scale:active {
+      transform: scale(0.97);
+    }
   </style>
 </head>
-<body class="min-h-screen flex flex-col antialiased selection:bg-bamboo-100 selection:text-bamboo-800">
-
-  <!-- 頂部導航 -->
-  <header class="sticky top-0 z-40 bg-[#fdfbf7]/95 backdrop-blur-md border-b border-[#e7ded0] shadow-sm">
-    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <div class="w-9 h-9 rounded-lg bg-bamboo-700 flex items-center justify-center text-paper-50 font-chinese-serif text-lg font-bold shadow-inner">
-          編
-        </div>
+<body class="min-h-screen pb-16">
+  <!-- 頂部導覽列 -->
+  <header class="bg-paper-50 border-b border-paper-300 sticky top-0 z-40 shadow-xs">
+    <div class="max-w-6xl mx-auto px-4 py-3.5 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <span class="w-2.5 h-6 bg-bamboo-700 rounded-full"></span>
         <div>
-          <h1 class="text-base md:text-lg font-bold text-ink-900 font-chinese-serif tracking-wide">
-            國語文精進棧 · 題庫程式碼生成助手
-          </h1>
-          <p class="text-[11px] text-ink-700/70 font-medium">支援 Excel 批次轉換、彈性題數增減、表單一鍵複製至 Excel</p>
+          <h1 class="text-base md:text-lg font-bold text-ink-900 font-chinese-serif">課外國語文精進棧 · 代碼與題庫生成助手</h1>
+          <p class="text-[11px] text-ink-700">支援一字多音多義、動態題數調整、Excel 互轉與自動產生規範 ID</p>
         </div>
       </div>
-      <div class="flex items-center gap-2">
-        <button onclick="clearAllFormContents()" class="tap-scale px-3 py-1.5 text-xs font-semibold rounded-lg bg-vermilion-50 text-vermilion-600 border border-vermilion-300 hover:bg-vermilion-100 flex items-center gap-1" title="清空所有輸入框與預設範例">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-          <span>一鍵清空內容</span>
+      <div class="flex items-center flex-wrap gap-2">
+        <button onclick="clearAllFormContents()" class="px-3 py-1.5 bg-paper-100 hover:bg-paper-200 text-ink-800 text-xs font-semibold rounded-lg border border-paper-300 tap-scale flex items-center gap-1">
+          <span>🧹</span> 一鍵清空
         </button>
-        <button onclick="restoreDefaultSampleData()" class="tap-scale px-2.5 py-1.5 text-xs font-medium rounded-lg bg-paper-100 text-ink-700 border border-[#ebdcc7] hover:bg-paper-200 flex items-center gap-1" title="重新填入預設範例資料">
-          <span>🔄 恢復範例</span>
+        <button onclick="restoreDefaultSampleData()" class="px-3 py-1.5 bg-paper-100 hover:bg-paper-200 text-ink-800 text-xs font-semibold rounded-lg border border-paper-300 tap-scale flex items-center gap-1">
+          <span>🔄</span> 恢復範例
         </button>
-        <button onclick="copyFormAsExcelFormat()" class="tap-scale px-3 py-1.5 text-xs font-semibold rounded-lg bg-bamboo-50 text-bamboo-700 border border-bamboo-600 hover:bg-bamboo-100 flex items-center gap-1">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
-          <span>複製為 Excel 格式</span>
+        <button onclick="copyFormAsExcelFormat()" class="px-3 py-1.5 bg-ochre-50 hover:bg-ochre-100 text-ochre-800 text-xs font-semibold rounded-lg border border-ochre-700/30 tap-scale flex items-center gap-1">
+          <span>📋</span> 複製為 Excel (TSV)
         </button>
-        <button onclick="downloadExcelTemplate()" class="tap-scale px-3 py-1.5 text-xs font-semibold rounded-lg bg-paper-100 text-bamboo-700 border border-bamboo-600 hover:bg-bamboo-50 flex items-center gap-1">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-          <span>下載 Excel 範本</span>
+        <button onclick="downloadExcelTemplate()" class="px-3 py-1.5 bg-bamboo-50 hover:bg-bamboo-100 text-bamboo-800 text-xs font-semibold rounded-lg border border-bamboo-700/30 tap-scale flex items-center gap-1">
+          <span>📥</span> 下載範本
         </button>
-      </div>
-    </div>
-
-    <!-- 模式切換 Tabs -->
-    <div class="max-w-5xl mx-auto px-4 pb-2">
-      <div class="flex p-1 bg-[#ede6d8] rounded-xl space-x-1">
-        <button id="tab-btn-form" onclick="switchMode('form')" class="flex-1 py-2 text-xs md:text-sm font-bold rounded-lg transition-all text-bamboo-700 bg-[#fdfbf7] shadow-sm flex items-center justify-center gap-1.5">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-          視覺化表單輸入
-        </button>
-        <button id="tab-btn-excel" onclick="switchMode('excel')" class="flex-1 py-2 text-xs md:text-sm font-medium rounded-lg transition-all text-ink-700 hover:text-ink-900 flex items-center justify-center gap-1.5">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-          Excel / CSV 批次匯入轉換
+        <button onclick="openLivePreview()" class="px-3 py-1.5 bg-bamboo-700 hover:bg-bamboo-800 text-white text-xs font-bold rounded-lg shadow-xs tap-scale flex items-center gap-1.5">
+          <span>👁️</span> 即時預覽效果
         </button>
       </div>
     </div>
   </header>
 
-  <main class="flex-1 max-w-5xl w-full mx-auto p-4 md:p-6 space-y-6">
+  <!-- 主內容容器 -->
+  <main class="max-w-6xl mx-auto px-4 pt-5 space-y-6">
+    <!-- 模式切換分頁 -->
+    <div class="bg-paper-200/80 p-1.5 rounded-xl flex items-center max-w-md mx-auto border border-paper-300 shadow-inner">
+      <button id="tab-btn-form" onclick="switchMode('form')" class="flex-1 py-2 text-xs md:text-sm font-bold rounded-lg transition-all text-bamboo-700 bg-paper-50 shadow-sm flex items-center justify-center gap-1.5">
+        <span>✏️</span> 視覺化表單與動態編輯
+      </button>
+      <button id="tab-btn-excel" onclick="switchMode('excel')" class="flex-1 py-2 text-xs md:text-sm font-medium rounded-lg transition-all text-ink-700 hover:text-ink-900 flex items-center justify-center gap-1.5">
+        <span>📑</span> Excel 檔案批次解析匯入
+      </button>
+    </div>
 
-    <!-- ========== 模式 1：直觀視覺化表單輸入 ========== -->
+    <!-- 視圖 1: 視覺化表單輸入模式 -->
     <div id="mode-form-view" class="space-y-6">
-      
-      <!-- 基本日期設定卡片 -->
-      <div class="paper-card rounded-2xl p-4 md:p-5 space-y-3">
-        <div class="flex items-center justify-between border-b border-[#ebdcc7] pb-3">
+      <!-- 基礎設定卡片 -->
+      <section class="bg-paper-50 border border-paper-300 rounded-2xl p-4 md:p-5 shadow-sm space-y-4">
+        <div class="flex items-center justify-between border-b border-paper-200 pb-3">
           <div class="flex items-center gap-2">
-            <span class="w-1.5 h-4 bg-bamboo-700 rounded-full"></span>
-            <h2 class="text-sm md:text-base font-bold text-ink-900 font-chinese-serif">1. 決定目標排程日期與主題</h2>
+            <span class="w-2 h-4 bg-bamboo-700 rounded-full"></span>
+            <h2 class="text-sm md:text-base font-bold text-ink-900 font-chinese-serif">一、發布日程與當日主題</h2>
           </div>
-          <span class="text-xs text-bamboo-700 font-mono font-bold" id="auto-id-preview">ID: 20260916</span>
+          <span id="auto-id-preview" class="text-xs font-mono font-bold bg-bamboo-50 text-bamboo-800 px-2.5 py-1 rounded-md border border-bamboo-100">
+            ID: 20260916
+          </span>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
           <div>
-            <label class="block text-xs font-semibold text-ink-700 mb-1">目標發布日期</label>
-            <input type="date" id="form-date" value="2026-09-16" onchange="updateIdPreview()" class="w-full p-2.5 bg-white border border-[#ebdcc7] rounded-xl text-xs font-medium text-ink-900 focus:outline-none focus:ring-2 focus:ring-bamboo-600" />
+            <label class="block font-bold text-ink-900 mb-1.5">設定日期 (YYYY-MM-DD)</label>
+            <input type="date" id="form-date" value="2026-09-16" onchange="updateIdPreview()" class="w-full p-2 bg-white border border-paper-300 rounded-lg font-mono focus:ring-2 focus:ring-bamboo-700 outline-none" />
           </div>
           <div class="md:col-span-2">
-            <label class="block text-xs font-semibold text-ink-700 mb-1">當日專題目錄主題（簡述）</label>
-            <input type="text" id="form-theme" placeholder="例如：偏旁辨析：縝與瞋 × 經典題辭彙整" value="偏旁辨析：縝與瞋 × 經典題辭彙整" class="w-full p-2.5 bg-white border border-[#ebdcc7] rounded-xl text-xs font-medium text-ink-900 focus:outline-none focus:ring-2 focus:ring-bamboo-600" />
+            <label class="block font-bold text-ink-900 mb-1.5">當日專題總標題 (Theme)</label>
+            <input type="text" id="form-theme" value="偏旁辨析：縝與瞋 × 經典題辭彙整" class="w-full p-2 bg-white border border-paper-300 rounded-lg focus:ring-2 focus:ring-bamboo-700 outline-none" placeholder="例：偏旁辨析：縝與瞋 × 經典題辭彙整" />
           </div>
         </div>
-      </div>
+      </section>
 
-      <!-- 區塊 A：字音字形（單組形音義）輸入 -->
-      <div class="paper-card rounded-2xl p-4 md:p-5 space-y-4">
-        <div class="flex items-center justify-between border-b border-[#ebdcc7] pb-3">
+      <!-- 字音字形模組 (支援一字多音多義) -->
+      <section class="bg-paper-50 border border-paper-300 rounded-2xl p-4 md:p-5 shadow-sm space-y-4">
+        <div class="flex items-center justify-between border-b border-paper-200 pb-3">
           <div class="flex items-center gap-2">
-            <span class="w-1.5 h-4 bg-bamboo-700 rounded-full"></span>
-            <h2 class="text-sm md:text-base font-bold text-ink-900 font-chinese-serif">2. 單組字音字形（形近或同音字）</h2>
+            <span class="w-2 h-4 bg-bamboo-700 rounded-full"></span>
+            <h2 class="text-sm md:text-base font-bold text-ink-900 font-chinese-serif">二、單組相近/同音字音義精析（支援一字多音多義）</h2>
           </div>
-          <button onclick="addPhoneticRow()" class="px-2.5 py-1 text-xs bg-bamboo-50 hover:bg-bamboo-100 text-bamboo-700 border border-bamboo-200 rounded-lg font-semibold tap-scale">
-            + 增加比對字 (預設2字)
+          <button onclick="addPhoneticRow()" class="px-2.5 py-1 bg-bamboo-50 hover:bg-bamboo-100 text-bamboo-800 text-xs font-semibold rounded-md border border-bamboo-200 tap-scale flex items-center gap-1">
+            <span>+</span> 增加比對漢字
           </button>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
           <div>
-            <label class="block text-xs font-semibold text-ink-700 mb-1">本組標題</label>
-            <input type="text" id="form-phonetic-title" value="「縝」與「瞋」字形字音字義辨析" class="w-full p-2 bg-white border border-[#ebdcc7] rounded-lg text-xs" />
+            <label class="block font-bold text-ink-900 mb-1">本組專題標題</label>
+            <input type="text" id="form-phonetic-title" value="「縝」與「瞋」字形字音字義辨析" class="w-full p-2 bg-white border border-paper-300 rounded-lg" />
           </div>
           <div>
-            <label class="block text-xs font-semibold text-ink-700 mb-1">辨析標籤 (對照組名)</label>
-            <input type="text" id="form-phonetic-pair" value="縝 (糸部) vs 瞋 (目部)" class="w-full p-2 bg-white border border-[#ebdcc7] rounded-lg text-xs" />
+            <label class="block font-bold text-ink-900 mb-1">對照組標籤 (Pair Label)</label>
+            <input type="text" id="form-phonetic-pair" value="縝 (糸部) vs 瞋 (目部)" class="w-full p-2 bg-white border border-paper-300 rounded-lg" />
           </div>
         </div>
 
-        <!-- 字詞比對列表 -->
-        <div id="phonetic-items-container" class="space-y-3">
-          <!-- JS 動態增減，預設先放 2 組 -->
+        <!-- 動態漢字卡片容器 (支援破音字) -->
+        <div id="phonetic-items-container" class="space-y-3 pt-1">
+          <!-- 由 renderPhoneticRows() 動態渲染 -->
         </div>
 
-        <!-- 字音測驗題列表（可動態增減題數） -->
-        <div class="space-y-2 pt-1">
+        <!-- 字音字形動態測驗題 -->
+        <div class="pt-3 border-t border-paper-200 space-y-3">
           <div class="flex items-center justify-between">
-            <div class="text-xs font-bold text-bamboo-800 flex items-center gap-1.5">
-              <span>✍️ 字音字形測驗題庫</span>
-              <span id="p-quiz-count-badge" class="text-[10px] px-1.5 py-0.2 bg-bamboo-100 text-bamboo-800 rounded font-mono">1 題</span>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-ink-900 font-chinese-serif">字音字形對應測驗題</span>
+              <span id="p-quiz-count-badge" class="text-[10px] bg-bamboo-100 text-bamboo-800 px-1.5 py-0.5 rounded font-bold">1 題</span>
             </div>
-            <button onclick="addQuizItem('phonetic')" class="px-2.5 py-1 text-xs bg-bamboo-600 hover:bg-bamboo-700 text-white rounded-lg font-semibold tap-scale shadow-sm">
-              + 增加測驗題目
-            </button>
+            <button onclick="addQuizItem('phonetic')" class="text-xs text-bamboo-700 hover:underline font-bold">+ 增加字音測驗題</button>
           </div>
           <div id="phonetic-quizzes-container" class="space-y-3">
-            <!-- JS 動態渲染題幹與選項 -->
+            <!-- 由 renderQuizzes('phonetic') 動態渲染 -->
           </div>
         </div>
-      </div>
+      </section>
 
-      <!-- 區塊 B：每日成語輸入 -->
-      <div class="paper-card rounded-2xl p-4 md:p-5 space-y-4">
-        <div class="flex items-center justify-between border-b border-[#ebdcc7] pb-3">
+      <!-- 每日成語模組 -->
+      <section class="bg-paper-50 border border-paper-300 rounded-2xl p-4 md:p-5 shadow-sm space-y-4">
+        <div class="flex items-center justify-between border-b border-paper-200 pb-3">
           <div class="flex items-center gap-2">
-            <span class="w-1.5 h-4 bg-vermilion-600 rounded-full"></span>
-            <h2 class="text-sm md:text-base font-bold text-ink-900 font-chinese-serif">3. 每日成語深度解析（單則）</h2>
+            <span class="w-2 h-4 bg-vermilion-600 rounded-full"></span>
+            <h2 class="text-sm md:text-base font-bold text-ink-900 font-chinese-serif">三、每日成語深度精析（每日 1 則）</h2>
           </div>
-          <span class="text-xs text-vermilion-600 font-bold bg-vermilion-50 px-2 py-0.5 rounded border border-vermilion-100">每日一則</span>
+          <span class="text-[11px] bg-vermilion-50 text-vermilion-700 px-2 py-0.5 rounded border border-vermilion-100 font-medium">成語專題</span>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
           <div>
-            <label class="block text-xs font-semibold text-ink-700 mb-1">成語名稱</label>
-            <input type="text" id="form-i-title" value="暴殄天物" class="w-full p-2 bg-white border border-[#ebdcc7] rounded-lg text-xs font-bold font-chinese-serif" />
+            <label class="block font-bold text-ink-900 mb-1">成語名稱</label>
+            <input type="text" id="form-i-title" value="暴殄天物" class="w-full p-2 bg-white border border-paper-300 rounded-lg font-chinese-serif font-bold text-sm" />
           </div>
           <div>
-            <label class="block text-xs font-semibold text-ink-700 mb-1">注音符號</label>
-            <input type="text" id="form-i-pinyin" value="ㄅㄠˋ ㄊㄧㄢˇ ㄊㄧㄢ ㄨˋ" class="w-full p-2 bg-white border border-[#ebdcc7] rounded-lg text-xs font-mono" />
+            <label class="block font-bold text-ink-900 mb-1">注音符號</label>
+            <input type="text" id="form-i-pinyin" value="ㄅㄠˋ ㄊㄧㄢˇ ㄊㄧㄢ ㄨˋ" class="w-full p-2 bg-white border border-paper-300 rounded-lg font-mono" />
           </div>
           <div>
-            <label class="block text-xs font-semibold text-ink-700 mb-1">考點分類標籤</label>
-            <input type="text" id="form-i-tag" value="字音與字形易錯" class="w-full p-2 bg-white border border-[#ebdcc7] rounded-lg text-xs" />
+            <label class="block font-bold text-ink-900 mb-1">考點分類標籤</label>
+            <input type="text" id="form-i-tag" value="字音與字形易錯" class="w-full p-2 bg-white border border-paper-300 rounded-lg" />
           </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
           <div>
-            <label class="block font-semibold text-ink-700 mb-1">字詞析釋</label>
-            <textarea id="form-i-words" rows="2" class="w-full p-2 bg-white border border-[#ebdcc7] rounded-lg">「殄」（ㄊㄧㄢˇ）：盡絕、滅絕。殘害滅絕天生自然萬物。</textarea>
+            <label class="block font-bold text-ink-900 mb-1">字詞析釋 (含關鍵字讀音與本義)</label>
+            <textarea id="form-i-words" rows="2" class="w-full p-2 bg-white border border-paper-300 rounded-lg">「殄」（ㄊㄧㄢˇ）：盡絕、滅絕。殘害滅絕天生自然萬物。</textarea>
           </div>
           <div>
-            <label class="block font-semibold text-ink-700 mb-1">核心語義</label>
-            <textarea id="form-i-meaning" rows="2" class="w-full p-2 bg-white border border-[#ebdcc7] rounded-lg">比喻不知愛惜物品，隨意糟蹋浪費物力資源。</textarea>
-          </div>
-          <div>
-            <label class="block font-semibold text-ink-700 mb-1 text-vermilion-600">⚠️ 易錯警示</label>
-            <textarea id="form-i-warning" rows="2" class="w-full p-2 bg-white border border-[#ebdcc7] rounded-lg">「殄」字音ㄊㄧㄢˇ，切勿誤讀為ㄓㄣˇ；從歹部，勿誤寫為「珍」。</textarea>
-          </div>
-          <div>
-            <label class="block font-semibold text-ink-700 mb-1">生活例句</label>
-            <textarea id="form-i-sample" rows="2" class="w-full p-2 bg-white border border-[#ebdcc7] rounded-lg">滿桌豐盛佳餚吃沒幾口就全數倒掉，實在太暴殄天物了！</textarea>
+            <label class="block font-bold text-ink-900 mb-1">核心語意</label>
+            <textarea id="form-i-meaning" rows="2" class="w-full p-2 bg-white border border-paper-300 rounded-lg">比喻不知愛惜物品，隨意糟蹋浪費物力資源。</textarea>
           </div>
         </div>
 
-        <!-- 成語測驗題列表（可動態增減題數） -->
-        <div class="space-y-2 pt-1">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+          <div>
+            <label class="block font-bold text-vermilion-600 mb-1">⚠️ 易錯警示 (易寫錯/易念錯考點)</label>
+            <input type="text" id="form-i-warning" value="「殄」字音ㄊㄧㄢˇ，切勿誤讀為ㄓㄣˇ；從歹部，勿誤寫為「珍」。" class="w-full p-2 bg-white border border-paper-300 rounded-lg text-vermilion-700" />
+          </div>
+          <div>
+            <label class="block font-bold text-ink-900 mb-1">生活典範例句</label>
+            <input type="text" id="form-i-sample" value="滿桌豐盛佳餚吃沒幾口就全數倒掉，實在太暴殄天物了！" class="w-full p-2 bg-white border border-paper-300 rounded-lg" />
+          </div>
+        </div>
+
+        <!-- 成語動態測驗題 -->
+        <div class="pt-3 border-t border-paper-200 space-y-3">
           <div class="flex items-center justify-between">
-            <div class="text-xs font-bold text-vermilion-700 flex items-center gap-1.5">
-              <span>✍️ 成語配套測驗題庫</span>
-              <span id="i-quiz-count-badge" class="text-[10px] px-1.5 py-0.2 bg-vermilion-100 text-vermilion-800 rounded font-mono">1 題</span>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-ink-900 font-chinese-serif">成語對應測驗題</span>
+              <span id="i-quiz-count-badge" class="text-[10px] bg-vermilion-100 text-vermilion-800 px-1.5 py-0.5 rounded font-bold">1 題</span>
             </div>
-            <button onclick="addQuizItem('idiom')" class="px-2.5 py-1 text-xs bg-vermilion-600 hover:bg-vermilion-700 text-white rounded-lg font-semibold tap-scale shadow-sm">
-              + 增加測驗題目
-            </button>
+            <button onclick="addQuizItem('idiom')" class="text-xs text-vermilion-600 hover:underline font-bold">+ 增加成語測驗題</button>
           </div>
           <div id="idiom-quizzes-container" class="space-y-3">
-            <!-- JS 動態渲染題幹與選項 -->
+            <!-- 由 renderQuizzes('idiom') 動態渲染 -->
           </div>
         </div>
-      </div>
+      </section>
 
-      <!-- 區塊 C：國學常識專題（可視化動態表格編輯器） -->
-      <div class="paper-card rounded-2xl p-4 md:p-5 space-y-4">
-        <div class="flex items-center justify-between border-b border-[#ebdcc7] pb-3">
+      <!-- 國學常識模組 (動態表格編輯器) -->
+      <section class="bg-paper-50 border border-paper-300 rounded-2xl p-4 md:p-5 shadow-sm space-y-4">
+        <div class="flex items-center justify-between border-b border-paper-200 pb-3">
           <div class="flex items-center gap-2">
-            <span class="w-1.5 h-4 bg-amber-600 rounded-full"></span>
-            <h2 class="text-sm md:text-base font-bold text-ink-900 font-chinese-serif">4. 國學常識專題對照表格（視覺化編輯）</h2>
+            <span class="w-2 h-4 bg-ochre-700 rounded-full"></span>
+            <h2 class="text-sm md:text-base font-bold text-ink-900 font-chinese-serif">四、國學常識對照精要表</h2>
           </div>
           <div class="flex items-center gap-2">
-            <button onclick="addLitTableColumn()" class="px-2 py-1 text-xs bg-paper-100 hover:bg-paper-200 text-ink-800 border border-[#ebdcc7] rounded-lg font-medium tap-scale">
-              + 增加欄 (直行)
-            </button>
-            <button onclick="addLitTableRow()" class="px-2 py-1 text-xs bg-bamboo-50 hover:bg-bamboo-100 text-bamboo-700 border border-bamboo-200 rounded-lg font-medium tap-scale">
-              + 增加列 (橫排)
-            </button>
+            <button onclick="addLitColumn()" class="px-2 py-1 bg-ochre-50 hover:bg-ochre-100 text-ochre-800 text-xs rounded border border-ochre-200 tap-scale font-medium">+ 增加欄位</button>
+            <button onclick="addLitRow()" class="px-2 py-1 bg-ochre-50 hover:bg-ochre-100 text-ochre-800 text-xs rounded border border-ochre-200 tap-scale font-medium">+ 增加列</button>
           </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
           <div>
-            <label class="block text-xs font-semibold text-ink-700 mb-1">國學表格大標題</label>
-            <input type="text" id="form-lit-title" value="常見生活題辭分類對照精要表" class="w-full p-2 bg-white border border-[#ebdcc7] rounded-lg text-xs font-bold" />
+            <label class="block font-bold text-ink-900 mb-1">國學專題大標</label>
+            <input type="text" id="form-lit-title" value="常見生活題辭分類對照精要表" class="w-full p-2 bg-white border border-paper-300 rounded-lg" />
           </div>
           <div>
-            <label class="block text-xs font-semibold text-ink-700 mb-1">專題類別</label>
-            <input type="text" id="form-lit-cat" value="應用文與社交禮俗題辭" class="w-full p-2 bg-white border border-[#ebdcc7] rounded-lg text-xs" />
-          </div>
-          <div class="md:col-span-2">
-            <label class="block text-xs font-semibold text-ink-700 mb-1">專題說明導讀</label>
-            <input type="text" id="form-lit-desc" value="題辭簡短精煉，大考常考祝壽、賀婚、哀輓之對象與特定對稱詞辨析。" class="w-full p-2 bg-white border border-[#ebdcc7] rounded-lg text-xs" />
+            <label class="block font-bold text-ink-900 mb-1">類別標籤</label>
+            <input type="text" id="form-lit-cat" value="應用文與社交禮俗題辭" class="w-full p-2 bg-white border border-paper-300 rounded-lg" />
           </div>
         </div>
 
-        <!-- 視覺化表格容器 -->
-        <div class="overflow-x-auto rounded-xl border border-[#ebdcc7] bg-white p-2">
-          <table class="w-full text-xs" id="interactive-lit-table">
-            <thead class="bg-[#f3ede1]" id="interactive-lit-thead">
-              <!-- JS 動態生成欄位表頭 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+          <div>
+            <label class="block font-bold text-ink-900 mb-1">考點導讀說明</label>
+            <input type="text" id="form-lit-desc" value="題辭簡短精煉，大考常考祝壽、賀婚、哀輓之對象與特定對稱詞辨析。" class="w-full p-2 bg-white border border-paper-300 rounded-lg" />
+          </div>
+          <div>
+            <label class="block font-bold text-ink-900 mb-1">考點速記提示 (Tip)</label>
+            <input type="text" id="form-lit-tip" value="「駕鶴西歸、福壽全歸」用於男喪；「母儀足式」用於女喪；「杏林春暖」專賀醫界。" class="w-full p-2 bg-white border border-paper-300 rounded-lg" />
+          </div>
+        </div>
+
+        <!-- 國學動態表格 -->
+        <div class="overflow-x-auto border border-paper-300 rounded-xl bg-white">
+          <table id="interactive-lit-table" class="w-full text-xs text-left">
+            <thead id="lit-table-thead" class="bg-paper-100 text-ink-900 font-bold border-b border-paper-300">
+              <!-- 動態表頭 -->
             </thead>
-            <tbody id="interactive-lit-tbody" class="divide-y divide-[#ebdcc7]">
-              <!-- JS 動態生成列資料輸入框 -->
+            <tbody id="lit-table-tbody" class="divide-y divide-paper-200">
+              <!-- 動態內容列 -->
             </tbody>
           </table>
         </div>
 
-        <div>
-          <label class="block text-xs font-semibold text-amber-700 mb-1">💡 大考考點速記提示</label>
-          <input type="text" id="form-lit-tip" value="「駕鶴西歸、福壽全歸」用於男喪；「母儀足式」用於女喪；「杏林春暖」專賀醫界。" class="w-full p-2 bg-amber-50 border border-[#ebdcc7] rounded-lg text-xs text-amber-800 font-medium" />
-        </div>
-
-        <!-- 國學測驗題列表（可動態增減題數） -->
-        <div class="space-y-2 pt-1">
+        <!-- 國學常識動態測驗題 -->
+        <div class="pt-3 border-t border-paper-200 space-y-3">
           <div class="flex items-center justify-between">
-            <div class="text-xs font-bold text-amber-800 flex items-center gap-1.5">
-              <span>✍️ 國學專題配套測驗題庫</span>
-              <span id="l-quiz-count-badge" class="text-[10px] px-1.5 py-0.2 bg-amber-100 text-amber-900 rounded font-mono">1 題</span>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-ink-900 font-chinese-serif">國學常識對應測驗題</span>
+              <span id="l-quiz-count-badge" class="text-[10px] bg-ochre-100 text-ochre-800 px-1.5 py-0.5 rounded font-bold">1 題</span>
             </div>
-            <button onclick="addQuizItem('lit')" class="px-2.5 py-1 text-xs bg-amber-700 hover:bg-amber-800 text-white rounded-lg font-semibold tap-scale shadow-sm">
-              + 增加測驗題目
-            </button>
+            <button onclick="addQuizItem('lit')" class="text-xs text-ochre-700 hover:underline font-bold">+ 增加國學測驗題</button>
           </div>
           <div id="lit-quizzes-container" class="space-y-3">
-            <!-- JS 動態渲染題幹與選項 -->
+            <!-- 由 renderQuizzes('lit') 動態渲染 -->
+          </div>
+        </div>
+      </section>
+
+      <!-- 底部生成按鈕列 -->
+      <div class="flex items-center justify-end gap-3 pt-2">
+        <button onclick="openLivePreview()" class="px-4 py-3 bg-paper-100 hover:bg-paper-200 text-ink-800 font-bold rounded-xl border border-paper-300 shadow-xs tap-scale flex items-center gap-2 text-sm">
+          <span>👁️</span> 預覽學生端呈現
+        </button>
+        <button onclick="generateCodeFromForm()" class="px-6 py-3 bg-bamboo-700 hover:bg-bamboo-800 text-white font-bold rounded-xl shadow-md tap-scale flex items-center gap-2 text-sm">
+          <span>⚡</span> 生成相容於主程式的代碼
+        </button>
+      </div>
+    </div>
+
+    <!-- 視圖 2: Excel 批次上傳模式 -->
+    <div id="mode-excel-view" class="hidden space-y-5">
+      <section class="bg-paper-50 border border-paper-300 rounded-2xl p-6 text-center space-y-4 shadow-sm">
+        <div class="w-14 h-14 bg-bamboo-100 text-bamboo-800 rounded-2xl flex items-center justify-center text-2xl mx-auto">
+          📊
+        </div>
+        <div>
+          <h2 class="text-base md:text-lg font-bold text-ink-900 font-chinese-serif">拖曳或選擇你的題庫 Excel 檔案</h2>
+          <p class="text-xs text-ink-700 mt-1">支援 .xlsx, .xls, .csv 格式。依照標準範本填寫，系統將自動解析為全套代碼。</p>
+        </div>
+
+        <div class="max-w-md mx-auto p-4 border-2 border-dashed border-paper-300 hover:border-bamboo-700 rounded-xl bg-paper-100/50 transition-colors">
+          <input type="file" id="excel-file-input" accept=".xlsx, .xls, .csv" onchange="handleExcelFileUpload(event)" class="hidden" />
+          <label for="excel-file-input" class="cursor-pointer block py-4">
+            <span class="text-sm font-bold text-bamboo-800 bg-white px-4 py-2 rounded-lg border border-paper-300 shadow-xs inline-block tap-scale">
+              選擇本機 Excel 檔案
+            </span>
+            <span class="block text-[11px] text-ink-700 mt-2">或將檔案直接拖放到此處</span>
+          </label>
+        </div>
+
+        <div id="excel-status-box" class="hidden max-w-md mx-auto p-3 bg-bamboo-50 border border-bamboo-200 rounded-xl text-xs text-bamboo-800 font-medium">
+          <span id="excel-row-count-badge">解析成功</span>
+        </div>
+      </section>
+    </div>
+
+    <!-- 代碼產出與一鍵複製區 -->
+    <section id="code-output-section" class="bg-paper-50 border border-paper-300 rounded-2xl p-4 md:p-5 shadow-sm space-y-3">
+      <div class="flex items-center justify-between border-b border-paper-200 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-4 bg-ink-700 rounded-full"></span>
+          <h3 class="text-sm md:text-base font-bold text-ink-900 font-chinese-serif">產出之 JavaScript 代碼塊（符合主程式格式）</h3>
+        </div>
+        <button onclick="copyGeneratedCode()" class="px-3.5 py-1.5 bg-bamboo-700 hover:bg-bamboo-800 text-white text-xs font-bold rounded-lg shadow-xs tap-scale flex items-center gap-1.5">
+          <span>📋</span> <span id="copy-btn-label">一鍵複製代碼</span>
+        </button>
+      </div>
+
+      <div class="relative">
+        <textarea id="output-code-textarea" rows="12" readonly class="w-full p-3.5 bg-ink-900 text-paper-100 font-mono text-xs rounded-xl focus:outline-none custom-scrollbar leading-relaxed" placeholder="點擊上方按鈕後，此處將自動產生標準結構代碼..."></textarea>
+      </div>
+      <p class="text-[11px] text-ink-700">
+        💡 提示：複製後，打開主程式 <code class="bg-paper-200 px-1 py-0.5 rounded text-ink-900 font-bold font-mono">index.html</code>，將各區段分別貼入對應的 <code class="font-mono">POOL_PHONETICS</code>、<code class="font-mono">POOL_IDIOMS</code>、<code class="font-mono">POOL_LIT</code> 與 <code class="font-mono">SCHEDULED_DAYS</code> 陣列或物件中即可生效！
+      </p>
+    </section>
+  </main>
+
+  <!-- 即時預覽效果浮層 (Modal) -->
+  <div id="preview-modal" class="fixed inset-0 z-50 bg-ink-900/60 backdrop-blur-xs flex items-center justify-center p-2 sm:p-4 hidden transition-opacity duration-200">
+    <div class="bg-paper-100 w-full max-w-4xl max-h-[92vh] rounded-2xl shadow-2xl border border-paper-300 flex flex-col overflow-hidden">
+      <!-- 預覽視窗頂部工具列 -->
+      <div class="px-4 py-3 bg-paper-50 border-b border-paper-300 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2.5">
+          <span class="w-2.5 h-5 bg-bamboo-700 rounded-full"></span>
+          <div>
+            <h3 class="text-sm font-bold text-ink-900 font-chinese-serif">學生端呈現效果即時預覽</h3>
+            <p class="text-[10px] text-ink-700">忠實呈現字音多音合併表、成語析釋、國學表格與測驗視圖</p>
+          </div>
+        </div>
+
+        <!-- 視圖切換與裝置模擬按鈕 -->
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <div class="bg-paper-200 p-0.5 rounded-lg flex text-xs">
+            <button id="pv-tab-study" onclick="switchPreviewTab('study')" class="px-2.5 py-1 font-bold rounded-md bg-white text-bamboo-800 shadow-xs">
+              📖 研讀表格
+            </button>
+            <button id="pv-tab-quiz" onclick="switchPreviewTab('quiz')" class="px-2.5 py-1 font-medium rounded-md text-ink-700 hover:text-ink-900">
+              ✍️ 實戰評量
+            </button>
+          </div>
+
+          <div class="bg-paper-200 p-0.5 rounded-lg flex text-xs">
+            <button id="pv-device-desktop" onclick="setPreviewDevice('desktop')" class="px-2 py-1 font-bold rounded-md bg-white text-ink-900 shadow-xs" title="電腦寬螢幕模式">
+              💻 寬版
+            </button>
+            <button id="pv-device-mobile" onclick="setPreviewDevice('mobile')" class="px-2 py-1 font-medium rounded-md text-ink-700" title="模擬手機螢幕模式 (390px)">
+              📱 手機
+            </button>
+          </div>
+
+          <button onclick="closeLivePreview()" class="w-7 h-7 rounded-lg bg-paper-200 hover:bg-vermilion-50 hover:text-vermilion-700 text-ink-700 flex items-center justify-center text-sm font-bold transition-colors">
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <!-- 預覽本體容器 (外層背景維持宣紙色) -->
+      <div id="preview-scroll-container" class="flex-1 overflow-y-auto p-3 sm:p-5 custom-scrollbar bg-paper-100 flex justify-center">
+        <!-- 模擬裝置容器寬度控制 -->
+        <div id="preview-device-frame" class="w-full transition-all duration-300 space-y-5">
+          <!-- 研讀視圖容器 -->
+          <div id="preview-study-content" class="space-y-4">
+            <!-- 由 renderLivePreviewContent() 動態生成 -->
+          </div>
+
+          <!-- 測驗視圖容器 -->
+          <div id="preview-quiz-content" class="hidden space-y-4">
+            <!-- 由 renderLivePreviewContent() 動態生成 -->
           </div>
         </div>
       </div>
 
-      <!-- 生成按鈕群 -->
-      <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
-        <button onclick="generateCodeFromForm()" class="tap-scale py-3.5 px-7 rounded-xl bg-gradient-to-r from-bamboo-700 to-bamboo-600 hover:from-bamboo-800 hover:to-bamboo-700 text-white font-bold text-sm md:text-base shadow-md flex items-center justify-center gap-2">
-          <span>⚡ 生成「課外國語文精進棧」標準程式碼</span>
-        </button>
-        <button onclick="copyFormAsExcelFormat()" class="tap-scale py-3.5 px-6 rounded-xl bg-white border-2 border-bamboo-600 text-bamboo-700 hover:bg-bamboo-50 font-bold text-sm md:text-base shadow-sm flex items-center justify-center gap-2">
-          <span>📋 複製表單內容為 Excel 貼上格式</span>
+      <!-- 預覽視窗底部資訊列 -->
+      <div class="px-4 py-2.5 bg-paper-50 border-t border-paper-300 flex items-center justify-between text-xs text-ink-700">
+        <span id="preview-date-label">受測期數：2026年09月16日</span>
+        <button onclick="closeLivePreview()" class="px-3 py-1 bg-paper-200 hover:bg-paper-300 text-ink-800 rounded-lg font-medium tap-scale">
+          關閉預覽
         </button>
       </div>
-
     </div>
+  </div>
 
-    <!-- ========== 模式 2：Excel / CSV 批次匯入轉換 ========== -->
-    <div id="mode-excel-view" class="hidden space-y-6">
-      
-      <div class="paper-card rounded-2xl p-6 text-center space-y-4 border-2 border-dashed border-[#ebdcc7]">
-        <div class="w-14 h-14 rounded-full bg-bamboo-50 text-bamboo-700 flex items-center justify-center mx-auto text-2xl font-bold">
-          📊
-        </div>
-        <div class="max-w-md mx-auto">
-          <h3 class="text-base font-bold text-ink-900 font-chinese-serif">匯入 Excel (.xlsx / .xls) 或 CSV 檔案</h3>
-          <p class="text-xs text-ink-700/70 mt-1">
-            可直接下載我們準備好的標準 4-Sheet 格式範本，填入題目後在此拖曳上傳，工具將自動解析為精確代碼。
-          </p>
-        </div>
-
-        <div class="flex justify-center gap-3 pt-2">
-          <label class="tap-scale px-5 py-2.5 bg-bamboo-700 hover:bg-bamboo-800 text-white rounded-xl text-xs md:text-sm font-semibold shadow-sm cursor-pointer flex items-center gap-2">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-            <span>選取 Excel 檔案上傳</span>
-            <input type="file" id="excel-file-input" accept=".xlsx, .xls, .csv" onchange="handleExcelFileUpload(event)" class="hidden" />
-          </label>
-          <button onclick="downloadExcelTemplate()" class="tap-scale px-4 py-2.5 bg-white text-ink-800 border border-[#ebdcc7] hover:bg-paper-100 rounded-xl text-xs md:text-sm font-medium">
-            📥 下載空白範本
-          </button>
-        </div>
-
-        <!-- 檔案說明標籤 -->
-        <div class="text-[11px] text-ink-700/60 max-w-xl mx-auto pt-2 leading-relaxed">
-          * 範本包含四張工作表：<strong>1_排程日程</strong>、<strong>2_字音字形</strong>、<strong>3_每日成語</strong>、<strong>4_國學常識</strong>，可一次批次匯入數十天的進度！
-        </div>
-      </div>
-
-      <!-- 匯入解析狀態面板 -->
-      <div id="excel-status-box" class="hidden paper-card rounded-2xl p-4 md:p-5 space-y-2">
-        <div class="flex items-center justify-between">
-          <h4 class="text-sm font-bold text-ink-900" id="excel-status-title">解析成功</h4>
-          <span id="excel-row-count-badge" class="text-xs px-2 py-0.5 rounded bg-bamboo-50 text-bamboo-700 font-medium">0 筆資料</span>
-        </div>
-        <p class="text-xs text-ink-700" id="excel-status-desc">已成功產生對應代碼，請點擊下方區塊查看並複製。</p>
-      </div>
-
-    </div>
-
-    <!-- ========== 成果展示與一鍵複製區塊 ========== -->
-    <div id="code-output-section" class="paper-card rounded-2xl p-5 md:p-6 space-y-4">
-      <div class="flex items-center justify-between border-b border-[#ebdcc7] pb-3">
-        <div>
-          <h3 class="text-base font-bold text-ink-900 font-chinese-serif flex items-center gap-2">
-            <span>💻 生成之 JavaScript 代碼區塊</span>
-            <span class="text-xs font-mono font-normal px-2 py-0.5 bg-paper-100 text-bamboo-700 rounded border border-[#ebdcc7]">可直接貼至 index.html</span>
-          </h3>
-          <p class="text-xs text-ink-700/70 mt-0.5">可直接點擊「一鍵複製」，貼入 `index.html` 中的對應陣列與排程物件內。</p>
-        </div>
-        <button onclick="copyGeneratedCode()" class="tap-scale px-4 py-2 bg-bamboo-700 hover:bg-bamboo-800 text-white rounded-xl text-xs md:text-sm font-semibold shadow-sm flex items-center gap-1.5">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
-          <span id="copy-btn-label">一鍵複製代碼</span>
-        </button>
-      </div>
-
-      <!-- 代碼預覽文字框 -->
-      <div class="relative">
-        <textarea id="output-code-textarea" readonly rows="12" class="w-full font-mono text-xs md:text-[13px] bg-[#1d1915] text-[#eee6d8] p-4 rounded-xl focus:outline-none leading-relaxed select-all" placeholder="// 生成的代碼將出現在此處..."></textarea>
-      </div>
-
-      <!-- 如何更新教學提示 -->
-      <div class="bg-paper-100/70 p-3.5 rounded-xl border border-[#ebdcc7] text-xs text-ink-800 leading-relaxed space-y-1">
-        <div class="font-bold text-bamboo-800">📌 如何將這段代碼放進主程式？</div>
-        <p>1. 複製上方輸出的代碼區塊。</p>
-        <p>2. 打開你的 <code>index.html</code> 檔案，找到 <code>POOL_PHONETICS</code>、<code>POOL_IDIOMS</code>、<code>POOL_LIT</code> 與 <code>SCHEDULED_DAYS</code>。</p>
-        <p>3. 將對應的物件貼至各個陣列中，存檔並推送到 GitHub 即可完成更新！</p>
-      </div>
-    </div>
-
-  </main>
-
-  <!-- 提示 Toast -->
-  <div id="toast-box" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-ink-900/90 backdrop-blur-sm text-paper-50 px-4 py-2.5 rounded-xl text-xs font-medium shadow-xl opacity-0 pointer-events-none transition-opacity duration-200 flex items-center gap-2">
+  <!-- 浮動 Toast 提示 -->
+  <div id="toast-box" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-ink-900/90 text-white px-4 py-2.5 rounded-xl shadow-xl flex items-center gap-2 text-xs transition-opacity duration-300 opacity-0 pointer-events-none">
     <span id="toast-icon">ℹ️</span>
-    <span id="toast-message">通知訊息</span>
+    <span id="toast-message">提示訊息</span>
   </div>
 
   <script>
-    // 預設字音對照比對字列表
+    // 預設字音對照比對字列表 (原生支援一字多音多義 readings 結構)
     let phoneticItems = [
       {
         char: "縝",
-        pinyin: "ㄓㄣˇ",
-        wrong: "容易誤讀為「ㄓㄣ」或寫成目部「瞋」",
-        meaning: "細緻、周密。從糸部。",
-        sample: "心思縝密（心思細密謹慎，考慮周詳）；文理縝密。"
+        readings: [
+          {
+            pinyin: "ㄓㄣˇ",
+            wrong: "容易誤讀為「ㄓㄣ」或寫成目部「瞋」",
+            meaning: "細緻、周密。從糸部。",
+            sample: "心思縝密（心思細密謹慎，考慮周詳）；文理縝密。"
+          }
+        ]
       },
       {
         char: "瞋",
-        pinyin: "ㄔㄣ",
-        wrong: "容易誤寫為糸部「縝」或誤讀為ㄊㄧㄢ",
-        meaning: "張大眼睛怒視。從目部。",
-        sample: "瞋目切齒（瞪大雙眼咬牙切齒，形容極其憤恨之狀）。"
+        readings: [
+          {
+            pinyin: "ㄔㄣ",
+            wrong: "容易誤寫為糸部「縝」或誤讀為ㄊㄧㄢ",
+            meaning: "張大眼睛怒視。從目部。",
+            sample: "瞋目切齒（瞪大雙眼咬牙切齒，形容極其憤恨之狀）。"
+          }
+        ]
       }
     ];
 
@@ -477,19 +501,21 @@
       }
     ];
 
+    // 更新 ID 預覽標籤
     function updateIdPreview() {
       const dateVal = document.getElementById("form-date").value || "2026-09-16";
       const cleanId = dateVal.replace(/-/g, '');
       document.getElementById("auto-id-preview").textContent = `ID: ${cleanId}`;
     }
 
+    // 切換表單模式 / Excel 模式
     function switchMode(mode) {
       const formView = document.getElementById("mode-form-view");
       const excelView = document.getElementById("mode-excel-view");
       const btnForm = document.getElementById("tab-btn-form");
       const btnExcel = document.getElementById("tab-btn-excel");
 
-      const activeClass = "flex-1 py-2 text-xs md:text-sm font-bold rounded-lg transition-all text-bamboo-700 bg-[#fdfbf7] shadow-sm flex items-center justify-center gap-1.5";
+      const activeClass = "flex-1 py-2 text-xs md:text-sm font-bold rounded-lg transition-all text-bamboo-700 bg-paper-50 shadow-sm flex items-center justify-center gap-1.5";
       const inactiveClass = "flex-1 py-2 text-xs md:text-sm font-medium rounded-lg transition-all text-ink-700 hover:text-ink-900 flex items-center justify-center gap-1.5";
 
       if (mode === 'form') {
@@ -524,7 +550,7 @@
         list = litQuizzes;
         containerId = "lit-quizzes-container";
         badgeId = "l-quiz-count-badge";
-        themeColor = "amber";
+        themeColor = "ochre";
         defaultType = "國學常識精要";
       }
 
@@ -534,43 +560,43 @@
 
       list.forEach((quiz, qIdx) => {
         const itemBox = document.createElement("div");
-        itemBox.className = "p-3 bg-paper-100/70 rounded-xl border border-[#ebdcc7] space-y-2 relative";
+        itemBox.className = "p-3 bg-paper-100/70 rounded-xl border border-paper-300 space-y-2 relative";
         itemBox.innerHTML = `
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
               <span class="text-xs font-bold text-${themeColor}-800">第 ${qIdx + 1} 題</span>
-              <input type="text" value="${quiz.type || defaultType}" oninput="${category}Quizzes[${qIdx}].type = this.value" class="text-[11px] px-1.5 py-0.5 bg-white border border-[#ebdcc7] rounded text-ink-700" placeholder="題型標籤" />
+              <input type="text" value="${quiz.type || defaultType}" oninput="${category}Quizzes[${qIdx}].type = this.value" class="text-[11px] px-1.5 py-0.5 bg-white border border-paper-300 rounded text-ink-700" placeholder="題型標籤" />
             </div>
             ${list.length > 1 ? `<button onclick="removeQuizItem('${category}', ${qIdx})" class="text-[11px] text-vermilion-600 hover:underline">刪除本題</button>` : ''}
           </div>
-          <input type="text" value="${quiz.q}" oninput="${category}Quizzes[${qIdx}].q = this.value" class="w-full p-2 bg-white border border-[#ebdcc7] rounded-lg text-xs" placeholder="題目題幹敘述" />
+          <input type="text" value="${quiz.q}" oninput="${category}Quizzes[${qIdx}].q = this.value" class="w-full p-2 bg-white border border-paper-300 rounded-lg text-xs" placeholder="題目題幹敘述" />
           <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
             <div class="flex items-center gap-1.5">
               <span class="w-5 text-center font-bold text-ink-700">A</span>
-              <input type="text" value="${quiz.options[0] || ''}" oninput="${category}Quizzes[${qIdx}].options[0] = this.value" class="flex-1 p-1.5 bg-white border border-[#ebdcc7] rounded-lg" placeholder="選項 A" />
+              <input type="text" value="${quiz.options[0] || ''}" oninput="${category}Quizzes[${qIdx}].options[0] = this.value" class="flex-1 p-1.5 bg-white border border-paper-300 rounded-lg" placeholder="選項 A" />
             </div>
             <div class="flex items-center gap-1.5">
               <span class="w-5 text-center font-bold text-ink-700">B</span>
-              <input type="text" value="${quiz.options[1] || ''}" oninput="${category}Quizzes[${qIdx}].options[1] = this.value" class="flex-1 p-1.5 bg-white border border-[#ebdcc7] rounded-lg" placeholder="選項 B" />
+              <input type="text" value="${quiz.options[1] || ''}" oninput="${category}Quizzes[${qIdx}].options[1] = this.value" class="flex-1 p-1.5 bg-white border border-paper-300 rounded-lg" placeholder="選項 B" />
             </div>
             <div class="flex items-center gap-1.5">
               <span class="w-5 text-center font-bold text-ink-700">C</span>
-              <input type="text" value="${quiz.options[2] || ''}" oninput="${category}Quizzes[${qIdx}].options[2] = this.value" class="flex-1 p-1.5 bg-white border border-[#ebdcc7] rounded-lg" placeholder="選項 C" />
+              <input type="text" value="${quiz.options[2] || ''}" oninput="${category}Quizzes[${qIdx}].options[2] = this.value" class="flex-1 p-1.5 bg-white border border-paper-300 rounded-lg" placeholder="選項 C" />
             </div>
             <div class="flex items-center gap-1.5">
               <span class="w-5 text-center font-bold text-ink-700">D</span>
-              <input type="text" value="${quiz.options[3] || ''}" oninput="${category}Quizzes[${qIdx}].options[3] = this.value" class="flex-1 p-1.5 bg-white border border-[#ebdcc7] rounded-lg" placeholder="選項 D" />
+              <input type="text" value="${quiz.options[3] || ''}" oninput="${category}Quizzes[${qIdx}].options[3] = this.value" class="flex-1 p-1.5 bg-white border border-paper-300 rounded-lg" placeholder="選項 D" />
             </div>
           </div>
           <div class="flex items-center gap-3 pt-1">
             <span class="text-xs font-bold text-ink-700">正確答案：</span>
-            <select onchange="${category}Quizzes[${qIdx}].ans = parseInt(this.value, 10)" class="p-1.5 bg-white border border-[#ebdcc7] rounded-lg text-xs font-bold text-${themeColor}-700">
+            <select onchange="${category}Quizzes[${qIdx}].ans = parseInt(this.value, 10)" class="p-1.5 bg-white border border-paper-300 rounded-lg text-xs font-bold text-${themeColor}-700">
               <option value="0" ${quiz.ans === 0 ? 'selected' : ''}>選項 A</option>
               <option value="1" ${quiz.ans === 1 ? 'selected' : ''}>選項 B</option>
               <option value="2" ${quiz.ans === 2 ? 'selected' : ''}>選項 C</option>
               <option value="3" ${quiz.ans === 3 ? 'selected' : ''}>選項 D</option>
             </select>
-            <input type="text" value="${quiz.exp}" oninput="${category}Quizzes[${qIdx}].exp = this.value" class="flex-1 p-1.5 bg-white border border-[#ebdcc7] rounded-lg text-xs" placeholder="正解與考點深度精析" />
+            <input type="text" value="${quiz.exp}" oninput="${category}Quizzes[${qIdx}].exp = this.value" class="flex-1 p-1.5 bg-white border border-paper-300 rounded-lg text-xs" placeholder="正解與考點深度精析" />
           </div>
         `;
         container.appendChild(itemBox);
@@ -605,42 +631,70 @@
       showToast("已刪除該題測驗", "🗑️");
     }
 
-    // 渲染字音字形輸入框
+    // 渲染字音字形輸入框 (完整修復語法錯誤，原生支援一字多音多義)
     function renderPhoneticRows() {
       const container = document.getElementById("phonetic-items-container");
       container.innerHTML = "";
 
-      phoneticItems.forEach((item, index) => {
+      phoneticItems.forEach((item, charIdx) => {
+        if (!item.readings || item.readings.length === 0) {
+          item.readings = [{ pinyin: "", wrong: "", meaning: "", sample: "" }];
+        }
+
         const itemBox = document.createElement("div");
-        itemBox.className = "p-3 bg-white rounded-xl border border-[#ebdcc7] space-y-2 relative";
+        itemBox.className = "p-3.5 bg-white rounded-xl border border-paper-300 space-y-3 relative shadow-xs";
+        
         itemBox.innerHTML = `
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-bamboo-700">字詞 ${index + 1}</span>
-            ${phoneticItems.length > 2 ? `<button onclick="removePhoneticRow(${index})" class="text-[11px] text-vermilion-600 hover:underline">刪除此字</button>` : ''}
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
-            <div>
-              <label class="block text-[11px] font-semibold text-ink-700 mb-0.5">漢字</label>
-              <input type="text" value="${item.char}" oninput="phoneticItems[${index}].char = this.value" class="w-full p-1.5 bg-[#fdfbf7] border border-[#ebdcc7] rounded text-xs font-bold font-chinese-serif" />
+          <div class="flex items-center justify-between border-b border-paper-200 pb-2">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-bamboo-700 font-chinese-serif">漢字單元 ${charIdx + 1}</span>
+              <span class="text-[11px] px-1.5 py-0.5 rounded ${item.readings.length > 1 ? 'bg-ochre-100 text-ochre-800 font-medium' : 'bg-paper-100 text-ink-700'}">
+                ${item.readings.length > 1 ? `含 ${item.readings.length} 種讀音 (多音字)` : '單音'}
+              </span>
             </div>
-            <div>
-              <label class="block text-[11px] font-semibold text-ink-700 mb-0.5">標準注音</label>
-              <input type="text" value="${item.pinyin}" oninput="phoneticItems[${index}].pinyin = this.value" class="w-full p-1.5 bg-[#fdfbf7] border border-[#ebdcc7] rounded text-xs font-mono" />
-            </div>
-            <div>
-              <label class="block text-[11px] font-semibold text-vermilion-600 mb-0.5">易錯陷阱</label>
-              <input type="text" value="${item.wrong}" oninput="phoneticItems[${index}].wrong = this.value" class="w-full p-1.5 bg-[#fdfbf7] border border-[#ebdcc7] rounded text-xs text-vermilion-700" />
+            <div class="flex items-center gap-2">
+              <button onclick="addReadingToChar(${charIdx})" class="text-[11px] px-2 py-0.5 bg-bamboo-50 hover:bg-bamboo-100 text-bamboo-700 rounded border border-bamboo-200 font-medium tap-scale">
+                + 增加此字的讀音 (破音字)
+              </button>
+              ${phoneticItems.length > 1 ? `<button onclick="removePhoneticRow(${charIdx})" class="text-[11px] text-vermilion-600 hover:underline">刪除此字</button>` : ''}
             </div>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
-            <div>
-              <label class="block text-[11px] font-semibold text-ink-700 mb-0.5">字義精析</label>
-              <input type="text" value="${item.meaning}" oninput="phoneticItems[${index}].meaning = this.value" class="w-full p-1.5 bg-[#fdfbf7] border border-[#ebdcc7] rounded text-xs" />
-            </div>
-            <div>
-              <label class="block text-[11px] font-semibold text-ink-700 mb-0.5">典型詞例</label>
-              <input type="text" value="${item.sample}" oninput="phoneticItems[${index}].sample = this.value" class="w-full p-1.5 bg-[#fdfbf7] border border-[#ebdcc7] rounded text-xs" />
-            </div>
+
+          <div class="w-28">
+            <label class="block text-[11px] font-bold text-ink-900 mb-0.5">目標漢字</label>
+            <input type="text" value="${item.char}" oninput="phoneticItems[${charIdx}].char = this.value" class="w-full p-1.5 bg-paper-50 border border-paper-300 rounded text-base font-bold font-chinese-serif text-center" placeholder="例：咽" />
+          </div>
+
+          <!-- 各讀音與字義清單 -->
+          <div class="space-y-2.5 pt-1">
+            ${item.readings.map((r, rIdx) => `
+              <div class="p-2.5 bg-paper-100/60 rounded-lg border border-paper-300 space-y-2 text-xs">
+                <div class="flex items-center justify-between">
+                  <span class="text-[11px] font-bold text-bamboo-800">讀音 / 字義 ${rIdx + 1}</span>
+                  ${item.readings.length > 1 ? `<button onclick="removeReadingFromChar(${charIdx}, ${rIdx})" class="text-[10px] text-vermilion-600 hover:underline">刪除此讀音</button>` : ''}
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  <div>
+                    <label class="block text-[10px] font-semibold text-ink-700 mb-0.5">標準注音 (含聲調)</label>
+                    <input type="text" value="${r.pinyin}" oninput="phoneticItems[${charIdx}].readings[${rIdx}].pinyin = this.value" class="w-full p-1.5 bg-white border border-paper-300 rounded font-mono" placeholder="例：ㄧㄢ 或 ㄧㄢˋ" />
+                  </div>
+                  <div>
+                    <label class="block text-[10px] font-semibold text-vermilion-600 mb-0.5">易錯陷阱／防混提示</label>
+                    <input type="text" value="${r.wrong}" oninput="phoneticItems[${charIdx}].readings[${rIdx}].wrong = this.value" class="w-full p-1.5 bg-white border border-paper-300 rounded text-vermilion-700" placeholder="例：吞嚥時讀ㄧㄢˋ，勿讀第一聲" />
+                  </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  <div>
+                    <label class="block text-[10px] font-semibold text-ink-700 mb-0.5">字義精析</label>
+                    <input type="text" value="${r.meaning}" oninput="phoneticItems[${charIdx}].readings[${rIdx}].meaning = this.value" class="w-full p-1.5 bg-white border border-paper-300 rounded" placeholder="此讀音對應的字義說明" />
+                  </div>
+                  <div>
+                    <label class="block text-[10px] font-semibold text-ink-700 mb-0.5">典範用例／成語詞例</label>
+                    <input type="text" value="${r.sample}" oninput="phoneticItems[${charIdx}].readings[${rIdx}].sample = this.value" class="w-full p-1.5 bg-white border border-paper-300 rounded" placeholder="例：狼吞虎嚥、細嚼慢嚥" />
+                  </div>
+                </div>
+              </div>
+            `).join('')}
           </div>
         `;
         container.appendChild(itemBox);
@@ -650,105 +704,116 @@
     function addPhoneticRow() {
       phoneticItems.push({
         char: "新字",
-        pinyin: "注音",
-        wrong: "易錯混淆點",
-        meaning: "字義說明",
-        sample: "經典範例詞"
+        readings: [
+          {
+            pinyin: "注音",
+            wrong: "易錯混淆點",
+            meaning: "字義說明",
+            sample: "經典範例詞"
+          }
+        ]
       });
       renderPhoneticRows();
     }
 
     function removePhoneticRow(index) {
-      if (phoneticItems.length <= 2) return;
+      if (phoneticItems.length <= 1) return;
       phoneticItems.splice(index, 1);
+      renderPhoneticRows();
+    }
+
+    function addReadingToChar(charIdx) {
+      phoneticItems[charIdx].readings.push({
+        pinyin: "",
+        wrong: "",
+        meaning: "",
+        sample: ""
+      });
+      renderPhoneticRows();
+      showToast("已為該字增加一個新讀音/字義！", "🔤");
+    }
+
+    function removeReadingFromChar(charIdx, readingIdx) {
+      if (phoneticItems[charIdx].readings.length <= 1) return;
+      phoneticItems[charIdx].readings.splice(readingIdx, 1);
       renderPhoneticRows();
     }
 
     // 渲染國學常識動態表格
     function renderInteractiveLitTable() {
-      const thead = document.getElementById("interactive-lit-thead");
-      const tbody = document.getElementById("interactive-lit-tbody");
+      const thead = document.getElementById("lit-table-thead");
+      const tbody = document.getElementById("lit-table-tbody");
 
-      thead.innerHTML = `
-        <tr>
-          ${litColumns.map((col, cIdx) => `
-            <th class="p-2 border-r border-[#ebdcc7] last:border-none">
-              <div class="flex items-center justify-between gap-1">
-                <input type="text" value="${col}" oninput="litColumns[${cIdx}] = this.value" class="w-full bg-white/70 px-1.5 py-1 rounded text-xs font-bold text-ink-900 border border-[#ebdcc7]/60" />
-                ${litColumns.length > 2 ? `<button onclick="removeLitColumn(${cIdx})" title="刪除本欄" class="text-ink-700 hover:text-vermilion-600 text-[10px]">✕</button>` : ''}
-              </div>
-            </th>
-          `).join('')}
-          <th class="w-10 text-center p-2 text-[10px] text-ink-700">操作</th>
-        </tr>
-      `;
-
-      tbody.innerHTML = "";
-      litRows.forEach((row, rIdx) => {
-        const tr = document.createElement("tr");
-        tr.className = "hover:bg-paper-50/60 transition-colors";
-        
-        while (row.length < litColumns.length) row.push("");
-
-        tr.innerHTML = `
-          ${row.map((cell, cIdx) => `
-            <td class="p-1.5 border-r border-[#ebdcc7] last:border-none">
-              <input type="text" value="${cell}" oninput="litRows[${rIdx}][${cIdx}] = this.value" class="w-full bg-transparent px-1.5 py-1 rounded text-xs text-ink-900 focus:bg-white focus:ring-1 focus:ring-bamboo-600 outline-none" />
-            </td>
-          `).join('')}
-          <td class="text-center p-1.5">
-            <button onclick="removeLitTableRow(${rIdx})" title="刪除此列" class="text-ink-700 hover:text-vermilion-600 text-xs">🗑️</button>
-          </td>
+      let theadHtml = "<tr>";
+      litColumns.forEach((colName, cIdx) => {
+        theadHtml += `
+          <th class="p-2.5 border-r border-paper-300 last:border-r-0">
+            <div class="flex items-center justify-between gap-1">
+              <input type="text" value="${colName}" oninput="litColumns[${cIdx}] = this.value" class="bg-transparent font-bold text-ink-900 w-full focus:bg-white focus:outline-none px-1 rounded" />
+              ${litColumns.length > 1 ? `<button onclick="removeLitColumn(${cIdx})" class="text-[10px] text-vermilion-600 hover:text-vermilion-700 px-1">✕</button>` : ''}
+            </div>
+          </th>
         `;
-        tbody.appendChild(tr);
       });
+      theadHtml += `<th class="w-10 p-2.5 text-center text-ink-700">操作</th></tr>`;
+      thead.innerHTML = theadHtml;
+
+      let tbodyHtml = "";
+      litRows.forEach((row, rIdx) => {
+        tbodyHtml += `<tr class="hover:bg-paper-50 transition-colors">`;
+        litColumns.forEach((_, cIdx) => {
+          const cellVal = row[cIdx] || "";
+          tbodyHtml += `
+            <td class="p-2 border-r border-paper-200 last:border-r-0">
+              <input type="text" value="${cellVal}" oninput="litRows[${rIdx}][${cIdx}] = this.value" class="w-full p-1 bg-transparent hover:bg-white focus:bg-white border border-transparent focus:border-paper-300 rounded" />
+            </td>
+          `;
+        });
+        tbodyHtml += `
+          <td class="p-2 text-center">
+            ${litRows.length > 1 ? `<button onclick="removeLitRow(${rIdx})" class="text-xs text-vermilion-600 hover:text-vermilion-700">刪</button>` : ''}
+          </td>
+        </tr>`;
+      });
+      tbody.innerHTML = tbodyHtml;
     }
 
-    function addLitTableColumn() {
-      litColumns.push(`新項目 ${litColumns.length + 1}`);
+    function addLitColumn() {
+      litColumns.push(`新欄位 ${litColumns.length + 1}`);
       litRows.forEach(r => r.push(""));
       renderInteractiveLitTable();
     }
 
-    function removeLitColumn(colIndex) {
-      if (litColumns.length <= 2) {
-        showToast("國學常識表格至少保留兩欄！", "⚠️");
-        return;
-      }
-      litColumns.splice(colIndex, 1);
-      litRows.forEach(r => r.splice(colIndex, 1));
+    function removeLitColumn(index) {
+      if (litColumns.length <= 1) return;
+      litColumns.splice(index, 1);
+      litRows.forEach(r => r.splice(index, 1));
       renderInteractiveLitTable();
     }
 
-    function addLitTableRow() {
+    function addLitRow() {
       const newRow = new Array(litColumns.length).fill("");
       litRows.push(newRow);
       renderInteractiveLitTable();
     }
 
-    function removeLitTableRow(rowIndex) {
-      if (litRows.length <= 1) {
-        showToast("表格至少保留一列內容！", "⚠️");
-        return;
-      }
-      litRows.splice(rowIndex, 1);
+    function removeLitRow(index) {
+      if (litRows.length <= 1) return;
+      litRows.splice(index, 1);
       renderInteractiveLitTable();
     }
 
-    // 一鍵清空所有預設內容，保留乾淨空白結構供使用者直接輸入
+    // 一鍵清空所有預設內容
     function clearAllFormContents() {
-      // 1. 清空主題與標題
       document.getElementById("form-theme").value = "";
       document.getElementById("form-phonetic-title").value = "";
       document.getElementById("form-phonetic-pair").value = "";
 
-      // 2. 清空字音字形比對字（保留 2 組空白列）
       phoneticItems = [
-        { char: "", pinyin: "", wrong: "", meaning: "", sample: "" },
-        { char: "", pinyin: "", wrong: "", meaning: "", sample: "" }
+        { char: "", readings: [{ pinyin: "", wrong: "", meaning: "", sample: "" }] },
+        { char: "", readings: [{ pinyin: "", wrong: "", meaning: "", sample: "" }] }
       ];
 
-      // 3. 清空字音測驗題（保留 1 題空白題目）
       phoneticQuizzes = [
         {
           type: "字音字形辨析",
@@ -759,7 +824,6 @@
         }
       ];
 
-      // 4. 清空每日成語輸入欄位
       document.getElementById("form-i-title").value = "";
       document.getElementById("form-i-pinyin").value = "";
       document.getElementById("form-i-tag").value = "成語辨正";
@@ -768,7 +832,6 @@
       document.getElementById("form-i-warning").value = "";
       document.getElementById("form-i-sample").value = "";
 
-      // 5. 清空成語測驗題（保留 1 題空白題目）
       idiomQuizzes = [
         {
           type: "成語用法辨正",
@@ -779,7 +842,6 @@
         }
       ];
 
-      // 6. 清空國學常識專題與表格
       document.getElementById("form-lit-title").value = "";
       document.getElementById("form-lit-cat").value = "國學專題";
       document.getElementById("form-lit-desc").value = "";
@@ -790,7 +852,6 @@
         ["", "", ""]
       ];
 
-      // 7. 清空國學測驗題（保留 1 題空白題目）
       litQuizzes = [
         {
           type: "國學常識精要",
@@ -801,10 +862,8 @@
         }
       ];
 
-      // 8. 清空代碼預覽區
       document.getElementById("output-code-textarea").value = "";
 
-      // 9. 重新渲染所有視圖
       renderPhoneticRows();
       renderInteractiveLitTable();
       renderQuizzes('phonetic');
@@ -823,17 +882,25 @@
       phoneticItems = [
         {
           char: "縝",
-          pinyin: "ㄓㄣˇ",
-          wrong: "容易誤讀為「ㄓㄣ」或寫成目部「瞋」",
-          meaning: "細緻、周密。從糸部。",
-          sample: "心思縝密（心思細密謹慎，考慮周詳）；文理縝密。"
+          readings: [
+            {
+              pinyin: "ㄓㄣˇ",
+              wrong: "容易誤讀為「ㄓㄣ」或寫成目部「瞋」",
+              meaning: "細緻、周密。從糸部。",
+              sample: "心思縝密（心思細密謹慎，考慮周詳）；文理縝密。"
+            }
+          ]
         },
         {
           char: "瞋",
-          pinyin: "ㄔㄣ",
-          wrong: "容易誤寫為糸部「縝」或誤讀為ㄊㄧㄢ",
-          meaning: "張大眼睛怒視。從目部。",
-          sample: "瞋目切齒（瞪大雙眼咬牙切齒，形容極其憤恨之狀）。"
+          readings: [
+            {
+              pinyin: "ㄔㄣ",
+              wrong: "容易誤寫為糸部「縝」或誤讀為ㄊㄧㄢ",
+              meaning: "張大眼睛怒視。從目部。",
+              sample: "瞋目切齒（瞪大雙眼咬牙切齒，形容極其憤恨之狀）。"
+            }
+          ]
         }
       ];
 
@@ -913,18 +980,13 @@
       showToast("已成功還原預設範例資料！", "🔄");
     }
 
-    // 取得單個或多個 quiz 的輸出格式（相容主程式）
+    // 格式化測驗題輸出
     function formatQuizOutput(quizzes) {
-      if (!quizzes || quizzes.length === 0) return null;
+      if (!quizzes || quizzes.length === 0) return {};
       if (quizzes.length === 1) {
-        return {
-          quiz: quizzes[0]
-        };
+        return { quiz: quizzes[0] };
       }
-      return {
-        quiz: quizzes[0],
-        quizzes: quizzes
-      };
+      return { quiz: quizzes[0], quizzes: quizzes };
     }
 
     // 從表單生成代碼
@@ -936,7 +998,6 @@
       const lId = `l${cleanDate}`;
       const theme = document.getElementById("form-theme").value.trim();
 
-      // 1. 字音字形物件
       const pQuizOut = formatQuizOutput(phoneticQuizzes);
       const phoneticObj = {
         id: pId,
@@ -946,7 +1007,6 @@
         ...pQuizOut
       };
 
-      // 2. 每日成語物件
       const iQuizOut = formatQuizOutput(idiomQuizzes);
       const idiomObj = {
         id: iId,
@@ -963,7 +1023,6 @@
         ...iQuizOut
       };
 
-      // 3. 國學常識物件
       const lQuizOut = formatQuizOutput(litQuizzes);
       const litObj = {
         id: lId,
@@ -976,7 +1035,6 @@
         ...lQuizOut
       };
 
-      // 4. 日程排程片段
       const scheduleSnippet = `"${dateISO}": {
   theme: "${theme}",
   phoneticId: "${pId}",
@@ -998,7 +1056,7 @@ ${scheduleSnippet},`;
 
       document.getElementById("output-code-textarea").value = fullOutput;
       document.getElementById("code-output-section").scrollIntoView({ behavior: 'smooth' });
-      showToast("代碼生成完畢！已支援自訂多題架構", "✨");
+      showToast("代碼生成完畢！已相容多音字與多題架構", "✨");
     }
 
     // 將視覺化表單所有內容複製為 Excel 格式 (TSV)
@@ -1007,14 +1065,11 @@ ${scheduleSnippet},`;
       const theme = document.getElementById("form-theme").value.trim();
 
       const lines = [];
-
-      // 表頭 1：排程日程
       lines.push("【1_排程日程】");
       lines.push("日期(YYYY-MM-DD)\t當日專題總標題");
       lines.push(`${dateISO}\t${theme}`);
       lines.push("");
 
-      // 表頭 2：字音字形
       lines.push("【2_字音字形】");
       const pHeader = ["日期", "本組標題", "對照組標籤"];
       phoneticItems.forEach((_, idx) => {
@@ -1032,7 +1087,8 @@ ${scheduleSnippet},`;
         document.getElementById("form-phonetic-pair").value.trim()
       ];
       phoneticItems.forEach(item => {
-        pRow.push(item.char, item.pinyin, item.wrong, item.meaning, item.sample);
+        const r0 = (item.readings && item.readings[0]) ? item.readings[0] : { pinyin: "", wrong: "", meaning: "", sample: "" };
+        pRow.push(item.char, r0.pinyin, r0.wrong, r0.meaning, r0.sample);
       });
       pRow.push(phoneticQuizzes.length);
       phoneticQuizzes.forEach(quiz => {
@@ -1049,7 +1105,6 @@ ${scheduleSnippet},`;
       lines.push(pRow.join("\t"));
       lines.push("");
 
-      // 表頭 3：每日成語
       lines.push("【3_每日成語】");
       const iHeader = [
         "日期", "成語名稱", "注音符號", "考點標籤", "字詞析釋", "核心語義", "易錯警示", "生活例句", "測驗題數"
@@ -1084,7 +1139,6 @@ ${scheduleSnippet},`;
       lines.push(iRow.join("\t"));
       lines.push("");
 
-      // 表頭 4：國學常識
       lines.push("【4_國學常識】");
       lines.push(`專題大標\t${document.getElementById("form-lit-title").value.trim()}`);
       lines.push(`類別標籤\t${document.getElementById("form-lit-cat").value.trim()}`);
@@ -1113,8 +1167,6 @@ ${scheduleSnippet},`;
       });
 
       const tsvContent = lines.join("\n");
-
-      // 複製到剪貼簿
       const tempTextArea = document.createElement("textarea");
       tempTextArea.value = tsvContent;
       tempTextArea.style.position = "fixed";
@@ -1200,8 +1252,18 @@ ${scheduleSnippet},`;
               title: r[1] || "",
               pairLabel: r[2] || "",
               items: [
-                { char: r[3] || "", pinyin: r[4] || "", wrong: r[5] || "", meaning: r[6] || "", sample: r[7] || "" },
-                { char: r[8] || "", pinyin: r[9] || "", wrong: r[10] || "", meaning: r[11] || "", sample: r[12] || "" }
+                {
+                  char: r[3] || "",
+                  readings: [
+                    { pinyin: r[4] || "", wrong: r[5] || "", meaning: r[6] || "", sample: r[7] || "" }
+                  ]
+                },
+                {
+                  char: r[8] || "",
+                  readings: [
+                    { pinyin: r[9] || "", wrong: r[10] || "", meaning: r[11] || "", sample: r[12] || "" }
+                  ]
+                }
               ],
               quiz: {
                 type: "字音字形辨析",
@@ -1311,7 +1373,7 @@ ${Object.entries(outScheduleObj).map(([k, v]) => `"${k}": ${JSON.stringify(v, nu
       reader.readAsArrayBuffer(file);
     }
 
-    // 複製產出代碼
+    // 複製代碼至剪貼簿
     function copyGeneratedCode() {
       const textarea = document.getElementById("output-code-textarea");
       if (!textarea.value.trim()) {
@@ -1330,7 +1392,7 @@ ${Object.entries(outScheduleObj).map(([k, v]) => `"${k}": ${JSON.stringify(v, nu
       showToast("已成功複製至剪貼簿！可直接貼上", "📋");
     }
 
-    // Toast 提示
+    // Toast 提示框
     let toastTimer = null;
     function showToast(msg, icon = 'ℹ️') {
       const toast = document.getElementById("toast-box");
@@ -1345,6 +1407,319 @@ ${Object.entries(outScheduleObj).map(([k, v]) => `"${k}": ${JSON.stringify(v, nu
         toast.classList.remove("opacity-100");
         toast.classList.add("opacity-0", "pointer-events-none");
       }, 2200);
+    }
+
+    let currentPreviewTab = 'study';
+    let currentPreviewDevice = 'desktop';
+
+    // 開啟即時預覽彈窗
+    function openLivePreview() {
+      renderLivePreviewContent();
+      const modal = document.getElementById("preview-modal");
+      modal.classList.remove("hidden");
+      document.body.style.overflow = "hidden";
+    }
+
+    // 關閉即時預覽彈窗
+    function closeLivePreview() {
+      const modal = document.getElementById("preview-modal");
+      modal.classList.add("hidden");
+      document.body.style.overflow = "";
+    }
+
+    // 鍵盤 ESC 關閉預覽彈窗
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const modal = document.getElementById("preview-modal");
+        if (modal && !modal.classList.contains("hidden")) {
+          closeLivePreview();
+        }
+      }
+    });
+
+    // 切換預覽標籤 (研讀模式 vs 測驗模式)
+    function switchPreviewTab(tab) {
+      currentPreviewTab = tab;
+      const btnStudy = document.getElementById("pv-tab-study");
+      const btnQuiz = document.getElementById("pv-tab-quiz");
+      const secStudy = document.getElementById("preview-study-content");
+      const secQuiz = document.getElementById("preview-quiz-content");
+
+      if (tab === 'study') {
+        btnStudy.className = "px-2.5 py-1 font-bold rounded-md bg-white text-bamboo-800 shadow-xs";
+        btnQuiz.className = "px-2.5 py-1 font-medium rounded-md text-ink-700 hover:text-ink-900";
+        secStudy.classList.remove("hidden");
+        secQuiz.classList.add("hidden");
+      } else {
+        btnStudy.className = "px-2.5 py-1 font-medium rounded-md text-ink-700 hover:text-ink-900";
+        btnQuiz.className = "px-2.5 py-1 font-bold rounded-md bg-white text-bamboo-800 shadow-xs";
+        secStudy.classList.add("hidden");
+        secQuiz.classList.remove("hidden");
+      }
+    }
+
+    // 切換預覽裝置寬度 (電腦寬螢幕 vs 手機寬度)
+    function setPreviewDevice(device) {
+      currentPreviewDevice = device;
+      const btnDesktop = document.getElementById("pv-device-desktop");
+      const btnMobile = document.getElementById("pv-device-mobile");
+      const frame = document.getElementById("preview-device-frame");
+
+      if (device === 'mobile') {
+        frame.classList.remove("w-full");
+        frame.classList.add("w-[390px]", "border", "border-paper-300", "rounded-2xl", "bg-paper-50", "p-3", "shadow-sm");
+        btnMobile.className = "px-2 py-1 font-bold rounded-md bg-white text-ink-900 shadow-xs";
+        btnDesktop.className = "px-2 py-1 font-medium rounded-md text-ink-700";
+      } else {
+        frame.classList.remove("w-[390px]", "border", "border-paper-300", "rounded-2xl", "bg-paper-50", "p-3", "shadow-sm");
+        frame.classList.add("w-full");
+        btnDesktop.className = "px-2 py-1 font-bold rounded-md bg-white text-ink-900 shadow-xs";
+        btnMobile.className = "px-2 py-1 font-medium rounded-md text-ink-700";
+      }
+    }
+
+    // 渲染預覽內容
+    function renderLivePreviewContent() {
+      const dateVal = document.getElementById("form-date").value || "2026-09-16";
+      const themeVal = document.getElementById("form-theme").value || "當日主題";
+      const pTitle = document.getElementById("form-phonetic-title").value || "單組字音字形辨析";
+      const pPair = document.getElementById("form-phonetic-pair").value || "對照組";
+
+      const iTitle = document.getElementById("form-i-title").value || "成語名稱";
+      const iPinyin = document.getElementById("form-i-pinyin").value || "";
+      const iTag = document.getElementById("form-i-tag").value || "成語精解";
+      const iWords = document.getElementById("form-i-words").value || "";
+      const iMeaning = document.getElementById("form-i-meaning").value || "";
+      const iWarning = document.getElementById("form-i-warning").value || "";
+      const iSample = document.getElementById("form-i-sample").value || "";
+
+      const lTitle = document.getElementById("form-lit-title").value || "國學專題對照表";
+      const lCat = document.getElementById("form-lit-cat").value || "國學常識";
+      const lDesc = document.getElementById("form-lit-desc").value || "";
+      const lTip = document.getElementById("form-lit-tip").value || "";
+
+      document.getElementById("preview-date-label").textContent = `受測期數：${dateVal} · 主題：${themeVal}`;
+
+      // 1. 構建「研讀表格視圖」
+      let studyHtml = `
+        <!-- 當日主題頂卡 -->
+        <div class="p-4 bg-paper-50 rounded-2xl border border-paper-300 shadow-xs flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-[11px] px-2 py-0.5 rounded bg-bamboo-100 text-bamboo-800 font-bold">今日研讀卡</span>
+              <span class="text-xs text-ink-700 font-mono font-medium">${dateVal}</span>
+            </div>
+            <h2 class="text-base sm:text-lg font-bold text-ink-900 font-chinese-serif mt-1">${themeVal}</h2>
+          </div>
+          <button onclick="switchPreviewTab('quiz')" class="px-3.5 py-1.5 bg-bamboo-700 hover:bg-bamboo-800 text-white text-xs font-bold rounded-lg shadow-xs tap-scale flex items-center gap-1">
+            <span>✍️</span> 進入模擬測驗
+          </button>
+        </div>
+
+        <!-- 區塊一：單組相近/同音字形音義精析表 (支援多音字 rowspan) -->
+        <section class="bg-paper-50 rounded-2xl border border-paper-300 p-3.5 sm:p-4 shadow-xs space-y-2.5">
+          <div class="flex items-center justify-between border-b border-paper-200 pb-2">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-4 bg-bamboo-700 rounded-full"></span>
+              <h3 class="text-xs sm:text-sm font-bold text-ink-900 font-chinese-serif">一、字音字形（${pTitle}）</h3>
+            </div>
+            <span class="text-[10px] px-2 py-0.5 bg-bamboo-50 text-bamboo-800 rounded font-medium border border-bamboo-200">${pPair}</span>
+          </div>
+
+          <div class="overflow-x-auto rounded-xl border border-paper-300 bg-white">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-paper-100 text-ink-900 font-bold border-b border-paper-300">
+                <tr>
+                  <th class="p-2 sm:p-2.5 w-14 text-center border-r border-paper-300">字形</th>
+                  <th class="p-2 sm:p-2.5 w-28 border-r border-paper-300">標準注音</th>
+                  <th class="p-2 sm:p-2.5 w-32 border-r border-paper-300 text-vermilion-600">考點／易錯陷阱</th>
+                  <th class="p-2 sm:p-2.5">字義解析與典型詞例</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-paper-200">
+      `;
+
+      phoneticItems.forEach(item => {
+        const readings = (item.readings && item.readings.length > 0) ? item.readings : [{ pinyin: "", wrong: "", meaning: "", sample: "" }];
+        const rowCount = readings.length;
+
+        readings.forEach((r, rIdx) => {
+          studyHtml += `<tr class="hover:bg-paper-50/70 transition-colors">`;
+          if (rIdx === 0) {
+            studyHtml += `
+              <td rowspan="${rowCount}" class="p-2 sm:p-2.5 text-center font-bold text-ink-900 font-chinese-serif text-lg border-r border-paper-300 bg-paper-50/40 align-top">
+                <div>${item.char || '—'}</div>
+                ${rowCount > 1 ? `<span class="inline-block text-[9px] px-1.5 py-0.5 bg-ochre-100 text-ochre-800 rounded font-sans font-medium mt-1">多音字</span>` : ''}
+              </td>
+            `;
+          }
+          studyHtml += `
+            <td class="p-2 sm:p-2.5 font-bold text-bamboo-700 font-mono border-r border-paper-200 align-top whitespace-nowrap">
+              ${rowCount > 1 ? `<span class="text-[9px] bg-bamboo-50 text-bamboo-800 px-1 py-0.5 rounded mr-1 font-sans">音${rIdx + 1}</span>` : ''}
+              ${r.pinyin || '—'}
+            </td>
+            <td class="p-2 sm:p-2.5 text-vermilion-600 border-r border-paper-200 align-top">
+              ${r.wrong || '—'}
+            </td>
+            <td class="p-2 sm:p-2.5 text-ink-800 align-top">
+              <div class="font-medium">${r.meaning || '—'}</div>
+              <div class="text-[11px] text-ink-700 mt-1">典範用例：<span class="font-semibold text-ink-900">${r.sample || '—'}</span></div>
+            </td>
+          </tr>`;
+        });
+      });
+
+      studyHtml += `
+              </tbody>
+            </table>
+          </div>
+          <p class="text-[11px] text-ink-700 italic">💡 記憶重點：留意字形偏旁關聯，多音多義字依詞性與詞意精準切換讀音。</p>
+        </section>
+
+        <!-- 區塊二：每日成語深度精解表 -->
+        <section class="bg-paper-50 rounded-2xl border border-paper-300 p-3.5 sm:p-4 shadow-xs space-y-2.5">
+          <div class="flex items-center justify-between border-b border-paper-200 pb-2">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-4 bg-vermilion-600 rounded-full"></span>
+              <h3 class="text-xs sm:text-sm font-bold text-ink-900 font-chinese-serif">二、每日成語（${iTitle}）</h3>
+            </div>
+            <span class="text-[10px] px-2 py-0.5 bg-vermilion-50 text-vermilion-700 rounded font-medium border border-vermilion-200">${iTag}</span>
+          </div>
+
+          <div class="overflow-x-auto rounded-xl border border-paper-300 bg-white">
+            <table class="w-full text-xs">
+              <tbody class="divide-y divide-paper-200 text-left">
+                <tr>
+                  <th class="w-28 p-2.5 bg-paper-100 text-ink-900 font-bold border-r border-paper-200">成語名稱</th>
+                  <td class="p-2.5 font-bold font-chinese-serif text-sm text-vermilion-700">${iTitle}</td>
+                </tr>
+                <tr>
+                  <th class="p-2.5 bg-paper-100 text-ink-900 font-bold border-r border-paper-200">標準注音</th>
+                  <td class="p-2.5 font-mono text-ink-800 font-bold">${iPinyin || '—'}</td>
+                </tr>
+                <tr>
+                  <th class="p-2.5 bg-paper-100 text-ink-900 font-bold border-r border-paper-200">字詞析釋</th>
+                  <td class="p-2.5 text-ink-800 leading-relaxed">${iWords || '—'}</td>
+                </tr>
+                <tr>
+                  <th class="p-2.5 bg-paper-100 text-ink-900 font-bold border-r border-paper-200">核心語意</th>
+                  <td class="p-2.5 text-ink-800 leading-relaxed font-medium">${iMeaning || '—'}</td>
+                </tr>
+                <tr>
+                  <th class="p-2.5 bg-paper-100 text-vermilion-700 font-bold border-r border-paper-200">⚠️ 易錯警示</th>
+                  <td class="p-2.5 text-vermilion-700 font-medium leading-relaxed">${iWarning || '—'}</td>
+                </tr>
+                <tr>
+                  <th class="p-2.5 bg-paper-100 text-ink-900 font-bold border-r border-paper-200">生活典範例句</th>
+                  <td class="p-2.5 text-ink-800 italic leading-relaxed">「${iSample || '—'}」</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 區塊三：國學常識專題對照精要表 -->
+        <section class="bg-paper-50 rounded-2xl border border-paper-300 p-3.5 sm:p-4 shadow-xs space-y-2.5">
+          <div class="flex items-center justify-between border-b border-paper-200 pb-2">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-4 bg-ochre-700 rounded-full"></span>
+              <h3 class="text-xs sm:text-sm font-bold text-ink-900 font-chinese-serif">三、國學常識（${lTitle}）</h3>
+            </div>
+            <span class="text-[10px] px-2 py-0.5 bg-ochre-50 text-ochre-800 rounded font-medium border border-ochre-200">${lCat}</span>
+          </div>
+
+          <p class="text-xs text-ink-700">${lDesc || '—'}</p>
+
+          <div class="overflow-x-auto rounded-xl border border-paper-300 bg-white">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-paper-100 text-ink-900 font-bold border-b border-paper-300">
+                <tr>
+                  ${litColumns.map(col => `<th class="p-2 sm:p-2.5 border-r border-paper-300 last:border-r-0 whitespace-nowrap">${col}</th>`).join('')}
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-paper-200">
+                ${litRows.map(row => `
+                  <tr class="hover:bg-paper-50 transition-colors">
+                    ${litColumns.map((_, cIdx) => `<td class="p-2 sm:p-2.5 border-r border-paper-200 last:border-r-0">${row[cIdx] || '—'}</td>`).join('')}
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+
+          ${lTip ? `<div class="p-2.5 bg-ochre-50 border border-ochre-200 rounded-xl text-xs text-ochre-800 flex items-start gap-1.5 font-medium"><span>💡</span><span>考點速記：${lTip}</span></div>` : ''}
+        </section>
+      `;
+
+      // 2. 構建「測驗評量視圖」
+      const allQuizzes = [
+        ...phoneticQuizzes.map((q, idx) => ({ ...q, category: '字音字形', tagColor: 'bamboo', uid: `p_${idx}` })),
+        ...idiomQuizzes.map((q, idx) => ({ ...q, category: '每日成語', tagColor: 'vermilion', uid: `i_${idx}` })),
+        ...litQuizzes.map((q, idx) => ({ ...q, category: '國學常識', tagColor: 'ochre', uid: `l_${idx}` }))
+      ];
+
+      let quizHtml = `
+        <div class="p-4 bg-paper-50 rounded-2xl border border-paper-300 shadow-xs flex items-center justify-between">
+          <div>
+            <span class="text-xs font-bold text-bamboo-800">測驗評量模擬器</span>
+            <h3 class="text-sm font-bold text-ink-900 font-chinese-serif">本日共規劃 ${allQuizzes.length} 題實戰測驗</h3>
+          </div>
+          <span class="text-xs bg-paper-200 text-ink-800 px-2.5 py-1 rounded-md font-mono">
+            可點擊選項測試回饋
+          </span>
+        </div>
+      `;
+
+      allQuizzes.forEach((item, qIdx) => {
+        quizHtml += `
+          <div class="bg-paper-50 rounded-2xl border border-paper-300 p-4 shadow-xs space-y-3">
+            <div class="flex items-center justify-between border-b border-paper-200 pb-2">
+              <span class="text-xs font-bold text-${item.tagColor}-800 font-chinese-serif">第 ${qIdx + 1} 題 · 【${item.category}】${item.type}</span>
+              <span class="text-[10px] text-ink-700 bg-paper-200 px-1.5 py-0.5 rounded font-mono">正解：${String.fromCharCode(65 + (item.ans || 0))}</span>
+            </div>
+            <p class="text-xs sm:text-sm font-bold text-ink-900 leading-relaxed">${item.q || '（未填寫題幹）'}</p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs" id="quiz-options-box-${item.uid}">
+              ${(item.options || []).map((opt, optIdx) => {
+                const optLetter = String.fromCharCode(65 + optIdx);
+                const isCorrect = (optIdx === item.ans);
+                return `
+                  <button onclick="handlePreviewQuizClick('${item.uid}', ${optIdx}, ${item.ans})" class="pv-opt-btn-${item.uid} p-2.5 bg-white hover:bg-paper-100 border border-paper-300 rounded-xl text-left font-medium transition-colors flex items-center gap-2 tap-scale">
+                    <span class="w-5 h-5 rounded-full bg-paper-200 text-ink-800 flex items-center justify-center font-bold text-[11px]">${optLetter}</span>
+                    <span class="flex-1">${opt || '—'}</span>
+                  </button>
+                `;
+              }).join('')}
+            </div>
+
+            <!-- 解析抽屜 (預設顯示正解方便老師校對) -->
+            <div class="p-2.5 bg-paper-100 rounded-xl border border-paper-300 text-xs text-ink-800 space-y-1">
+              <div class="font-bold text-bamboo-800 flex items-center gap-1">
+                <span>💡</span> <span>題解精析：</span>
+              </div>
+              <p class="text-ink-700 leading-relaxed">${item.exp || '正解為 ' + String.fromCharCode(65 + (item.ans || 0))}</p>
+            </div>
+          </div>
+        `;
+      });
+
+      document.getElementById("preview-study-content").innerHTML = studyHtml;
+      document.getElementById("preview-quiz-content").innerHTML = quizHtml;
+    }
+
+    // 模擬測驗選項點擊回饋
+    function handlePreviewQuizClick(uid, selectedIdx, correctIdx) {
+      const buttons = document.querySelectorAll(`.pv-opt-btn-${uid}`);
+      buttons.forEach((btn, idx) => {
+        btn.classList.remove("bg-white", "hover:bg-paper-100", "border-bamboo-700", "bg-bamboo-50", "text-bamboo-800", "border-vermilion-600", "bg-vermilion-50", "text-vermilion-800");
+        if (idx === correctIdx) {
+          btn.classList.add("border-bamboo-700", "bg-bamboo-50", "text-bamboo-800", "font-bold");
+        } else if (idx === selectedIdx) {
+          btn.classList.add("border-vermilion-600", "bg-vermilion-50", "text-vermilion-800");
+        } else {
+          btn.classList.add("bg-white", "opacity-60");
+        }
+      });
     }
 
     // 頁面初次載入
