@@ -80,6 +80,13 @@
         </div>
       </div>
       <div class="flex items-center gap-2">
+        <button onclick="clearAllFormContents()" class="tap-scale px-3 py-1.5 text-xs font-semibold rounded-lg bg-vermilion-50 text-vermilion-600 border border-vermilion-300 hover:bg-vermilion-100 flex items-center gap-1" title="清空所有輸入框與預設範例">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+          <span>一鍵清空內容</span>
+        </button>
+        <button onclick="restoreDefaultSampleData()" class="tap-scale px-2.5 py-1.5 text-xs font-medium rounded-lg bg-paper-100 text-ink-700 border border-[#ebdcc7] hover:bg-paper-200 flex items-center gap-1" title="重新填入預設範例資料">
+          <span>🔄 恢復範例</span>
+        </button>
         <button onclick="copyFormAsExcelFormat()" class="tap-scale px-3 py-1.5 text-xs font-semibold rounded-lg bg-bamboo-50 text-bamboo-700 border border-bamboo-600 hover:bg-bamboo-100 flex items-center gap-1">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
           <span>複製為 Excel 格式</span>
@@ -726,6 +733,184 @@
       }
       litRows.splice(rowIndex, 1);
       renderInteractiveLitTable();
+    }
+
+    // 一鍵清空所有預設內容，保留乾淨空白結構供使用者直接輸入
+    function clearAllFormContents() {
+      // 1. 清空主題與標題
+      document.getElementById("form-theme").value = "";
+      document.getElementById("form-phonetic-title").value = "";
+      document.getElementById("form-phonetic-pair").value = "";
+
+      // 2. 清空字音字形比對字（保留 2 組空白列）
+      phoneticItems = [
+        { char: "", pinyin: "", wrong: "", meaning: "", sample: "" },
+        { char: "", pinyin: "", wrong: "", meaning: "", sample: "" }
+      ];
+
+      // 3. 清空字音測驗題（保留 1 題空白題目）
+      phoneticQuizzes = [
+        {
+          type: "字音字形辨析",
+          q: "",
+          options: ["", "", "", ""],
+          ans: 0,
+          exp: ""
+        }
+      ];
+
+      // 4. 清空每日成語輸入欄位
+      document.getElementById("form-i-title").value = "";
+      document.getElementById("form-i-pinyin").value = "";
+      document.getElementById("form-i-tag").value = "成語辨正";
+      document.getElementById("form-i-words").value = "";
+      document.getElementById("form-i-meaning").value = "";
+      document.getElementById("form-i-warning").value = "";
+      document.getElementById("form-i-sample").value = "";
+
+      // 5. 清空成語測驗題（保留 1 題空白題目）
+      idiomQuizzes = [
+        {
+          type: "成語用法辨正",
+          q: "",
+          options: ["", "", "", ""],
+          ans: 0,
+          exp: ""
+        }
+      ];
+
+      // 6. 清空國學常識專題與表格
+      document.getElementById("form-lit-title").value = "";
+      document.getElementById("form-lit-cat").value = "國學專題";
+      document.getElementById("form-lit-desc").value = "";
+      document.getElementById("form-lit-tip").value = "";
+      litColumns = ["項目", "說明", "關鍵考點標記"];
+      litRows = [
+        ["", "", ""],
+        ["", "", ""]
+      ];
+
+      // 7. 清空國學測驗題（保留 1 題空白題目）
+      litQuizzes = [
+        {
+          type: "國學常識精要",
+          q: "",
+          options: ["", "", "", ""],
+          ans: 0,
+          exp: ""
+        }
+      ];
+
+      // 8. 清空代碼預覽區
+      document.getElementById("output-code-textarea").value = "";
+
+      // 9. 重新渲染所有視圖
+      renderPhoneticRows();
+      renderInteractiveLitTable();
+      renderQuizzes('phonetic');
+      renderQuizzes('idiom');
+      renderQuizzes('lit');
+
+      showToast("已一鍵清空所有預設內容，可直接填寫新題目！", "🧹");
+    }
+
+    // 恢復預設示範資料
+    function restoreDefaultSampleData() {
+      document.getElementById("form-theme").value = "偏旁辨析：縝與瞋 × 經典題辭彙整";
+      document.getElementById("form-phonetic-title").value = "「縝」與「瞋」字形字音字義辨析";
+      document.getElementById("form-phonetic-pair").value = "縝 (糸部) vs 瞋 (目部)";
+
+      phoneticItems = [
+        {
+          char: "縝",
+          pinyin: "ㄓㄣˇ",
+          wrong: "容易誤讀為「ㄓㄣ」或寫成目部「瞋」",
+          meaning: "細緻、周密。從糸部。",
+          sample: "心思縝密（心思細密謹慎，考慮周詳）；文理縝密。"
+        },
+        {
+          char: "瞋",
+          pinyin: "ㄔㄣ",
+          wrong: "容易誤寫為糸部「縝」或誤讀為ㄊㄧㄢ",
+          meaning: "張大眼睛怒視。從目部。",
+          sample: "瞋目切齒（瞪大雙眼咬牙切齒，形容極其憤恨之狀）。"
+        }
+      ];
+
+      phoneticQuizzes = [
+        {
+          type: "字音字形辨析",
+          q: "下列「」中字詞的讀音與用字，何者『完全正確』？",
+          options: [
+            "警察辦案細節「縝」密（ㄓㄣˇ）",
+            "他氣得「瞋」目結舌（ㄔㄣ）",
+            "心思極為「瞋」密（ㄓㄣˇ）",
+            "怒目切齒令人「縝」目（ㄔㄣ）"
+          ],
+          ans: 0,
+          exp: "正解為 A。縝（ㄓㄣˇ）密從糸部；瞋（ㄔㄣ）目張大眼睛從目部。"
+        }
+      ];
+
+      document.getElementById("form-i-title").value = "暴殄天物";
+      document.getElementById("form-i-pinyin").value = "ㄅㄠˋ ㄊㄧㄢˇ ㄊㄧㄢ ㄨˋ";
+      document.getElementById("form-i-tag").value = "字音與字形易錯";
+      document.getElementById("form-i-words").value = "「殄」（ㄊㄧㄢˇ）：盡絕、滅絕。殘害滅絕天生自然萬物。";
+      document.getElementById("form-i-meaning").value = "比喻不知愛惜物品，隨意糟蹋浪費物力資源。";
+      document.getElementById("form-i-warning").value = "「殄」字音ㄊㄧㄢˇ，切勿誤讀為ㄓㄣˇ；從歹部，勿誤寫為「珍」。";
+      document.getElementById("form-i-sample").value = "滿桌豐盛佳餚吃沒幾口就全數倒掉，實在太暴殄天物了！";
+
+      idiomQuizzes = [
+        {
+          type: "成語用法辨正",
+          q: "下列關於「暴殄天物」的用法與讀音，何者『完全正確』？",
+          options: [
+            "「殄」字讀音為 ㄓㄣˇ",
+            "「殄」字部首為夕部",
+            "此詞用以形容糟蹋浪費資源",
+            "成語常寫作暴「珍」天物"
+          ],
+          ans: 2,
+          exp: "正解為 C。「殄」音 ㄊㄧㄢˇ，從歹部，表示滅絕與殘害。"
+        }
+      ];
+
+      document.getElementById("form-lit-title").value = "常見生活題辭分類對照精要表";
+      document.getElementById("form-lit-cat").value = "應用文與社交禮俗題辭";
+      document.getElementById("form-lit-desc").value = "題辭簡短精煉，大考常考祝壽、賀婚、哀輓之對象與特定對稱詞辨析。";
+      document.getElementById("form-lit-tip").value = "「駕鶴西歸、福壽全歸」用於男喪；「母儀足式」用於女喪；「杏林春暖」專賀醫界。";
+
+      litColumns = ["題辭名稱", "適用場合", "典型受贈對象", "考點防混淆警示"];
+      litRows = [
+        ["杏林春暖", "醫師開業 / 診所診所", "醫界醫生", "切勿與教育界「杏壇」混淆"],
+        ["桃李芬芳", "教師節 / 學校校慶", "教育師長", "「杏壇、桃李、化雨」皆專指教育界"],
+        ["松柏長青", "男子祝壽 (花甲、古稀大壽)", "高齡長者 (男壽)", "女壽常送「瑤池春永、萱堂日永」"],
+        ["駕鶴西歸", "哀輓之辭", "長輩逝世 (男喪)", "女喪專用「母儀足式、瑤池召返」"]
+      ];
+
+      litQuizzes = [
+        {
+          type: "國學常識精要",
+          q: "李醫師的新診所開幕，致贈下列哪一則題辭匾額最為妥貼？",
+          options: [
+            "杏壇春風",
+            "杏林春暖",
+            "近悅遠來",
+            "桃李芬芳"
+          ],
+          ans: 1,
+          exp: "正解為 B。「杏林」代表醫界（董奉典故）；「杏壇、桃李」代表教育界；「近悅遠來」多賀旅館餐飲。"
+        }
+      ];
+
+      renderPhoneticRows();
+      renderInteractiveLitTable();
+      renderQuizzes('phonetic');
+      renderQuizzes('idiom');
+      renderQuizzes('lit');
+      generateCodeFromForm();
+
+      showToast("已成功還原預設範例資料！", "🔄");
     }
 
     // 取得單個或多個 quiz 的輸出格式（相容主程式）
