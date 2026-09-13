@@ -1563,7 +1563,7 @@ ${scheduleSnippet},`;
           <div class="bg-paper-50 rounded-2xl border border-paper-300 p-4 shadow-xs space-y-3">
             <div class="flex items-center justify-between border-b border-paper-200 pb-2">
               <span class="text-xs font-bold text-${item.tagColor}-800 font-chinese-serif">第 ${qIdx + 1} 題 · 【${item.category}】${item.type}</span>
-              <span class="text-[10px] text-ink-600 bg-paper-200 px-1.5 py-0.5 rounded font-mono">正解：${String.fromCharCode(65 + (item.ans || 0))}</span>
+              <span id="pv-status-${item.uid}" class="text-[10px] text-ink-600 bg-paper-200 px-2 py-0.5 rounded font-medium">請點選答案進行測試</span>
             </div>
             <p class="text-xs sm:text-sm font-bold text-ink-900 leading-relaxed">${item.q || '（未填寫題幹）'}</p>
 
@@ -1579,7 +1579,8 @@ ${scheduleSnippet},`;
               }).join('')}
             </div>
 
-            <div class="p-2.5 bg-paper-100 rounded-xl border border-paper-300 text-xs text-ink-800 space-y-1">
+            <!-- 題目精析：預設隱藏，點選選項後才展示 -->
+            <div id="pv-exp-${item.uid}" class="hidden p-2.5 bg-paper-100 rounded-xl border border-paper-300 text-xs text-ink-800 space-y-1">
               <div class="font-bold text-bamboo-800 flex items-center gap-1">
                 <span>💡</span> <span>題目精析：</span>
               </div>
@@ -1595,7 +1596,22 @@ ${scheduleSnippet},`;
 
     function handlePreviewQuizClick(uid, selectedIdx, correctIdx) {
       const buttons = document.querySelectorAll(`.pv-opt-btn-${uid}`);
+      const statusBadge = document.getElementById(`pv-status-${uid}`);
+      const expBox = document.getElementById(`pv-exp-${uid}`);
+
+      const isCorrect = (selectedIdx === correctIdx);
+      if (statusBadge) {
+        if (isCorrect) {
+          statusBadge.className = "text-[10px] text-emerald-800 bg-emerald-100 font-bold px-2 py-0.5 rounded";
+          statusBadge.textContent = "✓ 答對了！";
+        } else {
+          statusBadge.className = "text-[10px] text-vermilion-700 bg-vermilion-100 font-bold px-2 py-0.5 rounded";
+          statusBadge.textContent = `✕ 答錯了，正解為 ${String.fromCharCode(65 + correctIdx)}`;
+        }
+      }
+
       buttons.forEach((btn, idx) => {
+        btn.disabled = true;
         btn.classList.remove("bg-white", "hover:bg-paper-100", "border-bamboo-700", "bg-bamboo-100", "text-bamboo-800", "border-vermilion-600", "bg-vermilion-50", "text-vermilion-700");
         if (idx === correctIdx) {
           btn.classList.add("border-bamboo-700", "bg-bamboo-100", "text-bamboo-800", "font-bold");
@@ -1605,6 +1621,10 @@ ${scheduleSnippet},`;
           btn.classList.add("bg-white", "opacity-50");
         }
       });
+
+      if (expBox) {
+        expBox.classList.remove("hidden");
+      }
     }
 
     // 鍵盤監聽
