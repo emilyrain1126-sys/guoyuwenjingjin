@@ -345,6 +345,36 @@
     </div>
   </div>
 
+  <!-- 全庫檢索詳細內容檢閱浮層 (Detail Modal) -->
+  <div id="detail-modal" class="fixed inset-0 z-50 bg-ink-900/60 backdrop-blur-xs flex items-center justify-center p-2 sm:p-4 hidden transition-opacity duration-200">
+    <div class="bg-paper-100 w-full max-w-3xl max-h-[92vh] rounded-2xl shadow-2xl border border-paper-300 flex flex-col overflow-hidden">
+      <!-- 頂部標題列 -->
+      <div class="px-4 py-3 bg-paper-50 border-b border-paper-300 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span id="detail-modal-indicator" class="w-2.5 h-5 bg-bamboo-700 rounded-full"></span>
+          <div>
+            <h3 id="detail-modal-title" class="text-sm font-bold text-ink-900 font-chinese-serif">專題完整內容檢閱</h3>
+            <span id="detail-modal-subtitle" class="text-[10px] text-ink-600 font-mono">類別：----</span>
+          </div>
+        </div>
+        <button onclick="closeLibraryDetailModal()" class="w-7 h-7 rounded-lg bg-paper-200 hover:bg-paper-300 text-ink-800 text-sm font-bold flex items-center justify-center tap-scale">✕</button>
+      </div>
+
+      <!-- 完整內容滾動區 -->
+      <div id="detail-modal-content" class="flex-1 overflow-y-auto p-4 custom-scrollbar space-y-4 bg-paper-100">
+        <!-- 由 openLibraryDetailModal() 動態生成完整表格與題目 -->
+      </div>
+
+      <!-- 底部控制列 -->
+      <div class="px-4 py-2.5 bg-paper-50 border-t border-paper-300 flex items-center justify-between text-xs text-ink-600">
+        <span>💡 提示：可於下方直接點選題目選項進行實測</span>
+        <button onclick="closeLibraryDetailModal()" class="px-3.5 py-1.5 bg-paper-200 hover:bg-paper-300 text-ink-800 font-bold text-xs rounded-lg tap-scale">
+          關閉
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
     /* ==========================================================================
        一、核心題庫資料結構 (無多音多義標籤，包含真正的「同音多義」與破音字)
@@ -1079,6 +1109,7 @@
         POOL_PHONETICS.forEach(p => {
           const chars = p.items.map(it => it.char).join('、');
           items.push({
+            categoryKey: "phonetic",
             type: "字音字形",
             badgeColor: "bamboo",
             title: `${p.pairLabel}（${p.title}）`,
@@ -1091,6 +1122,7 @@
       if (currentSearchFilter === 'all' || currentSearchFilter === 'idiom') {
         POOL_IDIOMS.forEach(i => {
           items.push({
+            categoryKey: "idiom",
             type: "每日成語",
             badgeColor: "vermilion",
             title: `${i.title} (${i.pinyin})`,
@@ -1104,6 +1136,7 @@
         POOL_LIT.forEach(l => {
           const snippet = l.rows.slice(0, 3).map(r => r[0]).join('、');
           items.push({
+            categoryKey: "lit",
             type: "國學常識",
             badgeColor: "ochre",
             title: `${l.title}（${l.category}）`,
@@ -1126,17 +1159,323 @@
 
       items.forEach(it => {
         const box = document.createElement("div");
-        box.className = "p-3.5 bg-white rounded-xl border border-paper-300 shadow-xs space-y-1.5 hover:border-bamboo-700 transition-colors";
+        box.className = `p-3.5 bg-white rounded-xl border border-paper-300 shadow-xs space-y-2 hover:border-${it.badgeColor}-700 hover:shadow-sm transition-all cursor-pointer tap-scale group`;
+        box.onclick = () => openLibraryDetailModal(it.categoryKey, it.rawObj.id);
         box.innerHTML = `
           <div class="flex items-center justify-between">
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-${it.badgeColor}-50 text-${it.badgeColor}-800 border border-${it.badgeColor}-200">${it.type}</span>
-            <span class="text-[10px] font-mono text-ink-600">ID: ${it.rawObj.id}</span>
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-${it.badgeColor}-50 text-${it.badgeColor}-800 border border-${it.badgeColor}-200">${it.type}</span>
+              <span class="text-[10px] font-mono text-ink-600">ID: ${it.rawObj.id}</span>
+            </div>
+            <span class="text-xs text-${it.badgeColor}-700 font-bold flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">
+              檢視完整內容 ➔
+            </span>
           </div>
-          <h4 class="text-xs sm:text-sm font-bold text-ink-900 font-chinese-serif">${it.title}</h4>
+          <h4 class="text-xs sm:text-sm font-bold text-ink-900 font-chinese-serif group-hover:text-${it.badgeColor}-800 transition-colors">${it.title}</h4>
           <p class="text-xs text-ink-700 leading-relaxed">${it.desc}</p>
         `;
         container.appendChild(box);
       });
+    }
+
+    /* ==========================================================================
+       5.1 全庫檢索詳細內容彈窗邏輯
+       ========================================================================== */
+
+    function openLibraryDetailModal(categoryKey, itemId) {
+      const modal = document.getElementById("detail-modal");
+      const indicator = document.getElementById("detail-modal-indicator");
+      const titleEl = document.getElementById("detail-modal-title");
+      const subtitleEl = document.getElementById("detail-modal-subtitle");
+      const contentEl = document.getElementById("detail-modal-content");
+
+      let html = "";
+
+      if (categoryKey === 'phonetic') {
+        const p = POOL_PHONETICS.find(item => item.id === itemId);
+        if (!p) return;
+
+        indicator.className = "w-2.5 h-5 bg-bamboo-700 rounded-full";
+        titleEl.textContent = p.title;
+        subtitleEl.textContent = `【字音字形】${p.pairLabel} · ID: ${p.id}`;
+
+        let hasAnyWrongNote = false;
+        p.items.forEach(item => {
+          const readings = (item.readings && item.readings.length > 0) ? item.readings : [];
+          if (readings.some(r => r.wrong && r.wrong.trim() !== "" && r.wrong.trim() !== "—")) {
+            hasAnyWrongNote = true;
+          }
+        });
+
+        html += `
+          <div class="bg-white rounded-xl border border-paper-300 p-4 space-y-3 shadow-xs">
+            <div class="flex items-center justify-between border-b border-paper-200 pb-2">
+              <span class="text-xs font-bold text-bamboo-800 font-chinese-serif">一、字音字形與字義精析表</span>
+              <span class="text-[10px] px-2 py-0.5 bg-bamboo-50 text-bamboo-800 rounded font-medium border border-bamboo-200">${p.pairLabel}</span>
+            </div>
+
+            <div class="overflow-x-auto rounded-xl border border-paper-300 bg-white">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-paper-100 text-ink-900 font-bold border-b border-paper-300">
+                  <tr>
+                    <th class="p-2 sm:p-2.5 w-16 text-center border-r border-paper-300">字形</th>
+                    <th class="p-2 sm:p-2.5 w-28 border-r border-paper-300">標準注音</th>
+                    ${hasAnyWrongNote ? `<th class="p-2 sm:p-2.5 w-40 text-vermilion-700 border-r border-paper-300">考點／易錯防混</th>` : ''}
+                    <th class="p-2 sm:p-2.5">字義深度解析與典型例詞</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-paper-200 text-ink-800">
+        `;
+
+        p.items.forEach(item => {
+          const readings = (item.readings && item.readings.length > 0) ? item.readings : [{ pinyin: "—", wrong: "", meaning: "—", sample: "—" }];
+          const rowCount = readings.length;
+
+          readings.forEach((r, rIdx) => {
+            html += `<tr class="hover:bg-paper-50 transition-colors">`;
+            if (rIdx === 0) {
+              html += `
+                <td rowspan="${rowCount}" class="p-3 text-center font-bold font-chinese-serif text-2xl text-ink-900 border-r border-paper-300 bg-paper-50/50 align-top">
+                  <div class="py-1 tracking-wider">${item.char || '—'}</div>
+                </td>
+              `;
+            }
+
+            let meaningContentHtml = "";
+            if (r.senses && r.senses.length > 0) {
+              meaningContentHtml = `
+                <div class="space-y-2">
+                  ${r.meaning ? `<div class="font-bold text-ink-900 pb-1 border-b border-paper-200 text-xs">${r.meaning}</div>` : ''}
+                  ${r.senses.map(s => `
+                    <div class="p-2 bg-paper-100/70 rounded-lg border border-paper-200 space-y-1">
+                      <div class="font-bold text-bamboo-800 text-xs">${s.title}</div>
+                      <div class="text-xs text-ink-800 leading-relaxed">${s.desc}</div>
+                      <div class="text-[11px] text-ink-600">詞例文句：<span class="font-semibold text-ink-900">${s.sample}</span></div>
+                    </div>
+                  `).join('')}
+                </div>
+              `;
+            } else {
+              meaningContentHtml = `
+                <div class="font-medium text-xs leading-relaxed">${r.meaning || '—'}</div>
+                <div class="text-[11px] text-ink-600 mt-1">典範用例：<span class="font-semibold text-ink-900">${r.sample || '—'}</span></div>
+              `;
+            }
+
+            let wrongCellHtml = "";
+            if (hasAnyWrongNote) {
+              wrongCellHtml = `
+                <td class="p-2 sm:p-2.5 text-vermilion-700 font-medium text-xs border-r border-paper-200 align-top leading-relaxed">
+                  ${r.wrong && r.wrong.trim() !== "" ? r.wrong : '—'}
+                </td>
+              `;
+            }
+
+            html += `
+              <td class="p-2 sm:p-2.5 font-mono font-bold text-bamboo-700 text-sm border-r border-paper-200 align-top whitespace-nowrap">
+                ${r.pinyin || '—'}
+              </td>
+              ${wrongCellHtml}
+              <td class="p-2 sm:p-2.5 text-ink-800 align-top">
+                ${meaningContentHtml}
+              </td>
+            </tr>`;
+          });
+        });
+
+        html += `
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `;
+
+        if (p.quiz) {
+          html += renderDetailQuizBox(p.quiz, 'bamboo', '字音字形測驗');
+        }
+
+      } else if (categoryKey === 'idiom') {
+        const i = POOL_IDIOMS.find(item => item.id === itemId);
+        if (!i) return;
+
+        indicator.className = "w-2.5 h-5 bg-vermilion-600 rounded-full";
+        titleEl.textContent = i.title;
+        subtitleEl.textContent = `【每日成語】${i.tag || '成語精析'} · ID: ${i.id}`;
+
+        const rows = i.tableRows || [
+          { label: "成語讀音", val: i.pinyin },
+          { label: "字詞析釋", val: i.words || "—" },
+          { label: "核心語義", val: i.meaning || "—" },
+          { label: "⚠️ 易錯警示", val: i.warning || "" },
+          { label: "生活例句", val: i.sample || "—" }
+        ];
+
+        html += `
+          <div class="bg-white rounded-xl border border-paper-300 p-4 space-y-3 shadow-xs">
+            <div class="flex items-center justify-between border-b border-paper-200 pb-2">
+              <span class="text-xs font-bold text-vermilion-700 font-chinese-serif">二、每日成語深度析釋表</span>
+              <span class="text-[10px] px-2 py-0.5 bg-vermilion-50 text-vermilion-700 rounded font-medium border border-vermilion-200">${i.tag || '成語'}</span>
+            </div>
+
+            <div class="overflow-x-auto rounded-xl border border-paper-300 bg-white">
+              <table class="w-full text-xs sm:text-sm">
+                <tbody class="divide-y divide-paper-200">
+                  <tr>
+                    <th class="w-24 sm:w-32 p-2.5 bg-paper-100 text-ink-900 font-bold border-r border-paper-200 text-left">成語名稱</th>
+                    <td class="p-2.5 font-bold font-chinese-serif text-base text-vermilion-700">${i.title}</td>
+                  </tr>
+        `;
+
+        rows.forEach(r => {
+          const isWarning = r.label.includes("易錯") || r.label.includes("警示");
+          if (isWarning && (!r.val || r.val.trim() === "" || r.val.trim() === "—")) {
+            return;
+          }
+          html += `
+            <tr>
+              <th class="p-2.5 bg-paper-100 ${isWarning ? 'text-vermilion-700' : 'text-ink-900'} font-bold border-r border-paper-200 text-left align-top whitespace-nowrap">${r.label}</th>
+              <td class="p-2.5 text-ink-800 leading-relaxed ${isWarning ? 'text-vermilion-700 font-medium' : ''}">${r.val}</td>
+            </tr>
+          `;
+        });
+
+        html += `
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `;
+
+        if (i.quiz) {
+          html += renderDetailQuizBox(i.quiz, 'vermilion', '成語精進測驗');
+        }
+
+      } else if (categoryKey === 'lit') {
+        const l = POOL_LIT.find(item => item.id === itemId);
+        if (!l) return;
+
+        indicator.className = "w-2.5 h-5 bg-ochre-700 rounded-full";
+        titleEl.textContent = l.title;
+        subtitleEl.textContent = `【國學常識】${l.category} · ID: ${l.id}`;
+
+        html += `
+          <div class="bg-white rounded-xl border border-paper-300 p-4 space-y-3 shadow-xs">
+            <div class="flex items-center justify-between border-b border-paper-200 pb-2">
+              <span class="text-xs font-bold text-ochre-800 font-chinese-serif">三、國學常識專題精要表</span>
+              <span class="text-[10px] px-2 py-0.5 bg-ochre-50 text-ochre-800 rounded font-medium border border-ochre-200">${l.category}</span>
+            </div>
+
+            <div class="space-y-1">
+              <h4 class="font-bold text-ink-900 text-sm">${l.title}</h4>
+              <p class="text-xs text-ink-700">${l.description || '常見重要考點對照整理：'}</p>
+            </div>
+
+            <div class="overflow-x-auto rounded-xl border border-paper-300 bg-white">
+              <table class="w-full text-left text-xs sm:text-sm">
+                <thead class="bg-paper-100 text-ink-900 font-bold border-b border-paper-300">
+                  <tr>${l.columns.map(col => `<th class="p-2.5 sm:p-3 border-r border-paper-300 last:border-r-0 whitespace-nowrap">${col}</th>`).join('')}</tr>
+                </thead>
+                <tbody class="divide-y divide-paper-200 text-ink-800">
+                  ${l.rows.map(r => `
+                    <tr class="hover:bg-paper-50 transition-colors">
+                      ${l.columns.map((_, colIdx) => `<td class="p-2.5 sm:p-3 border-r border-paper-200 last:border-r-0 align-top">${r[colIdx] || '—'}</td>`).join('')}
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+
+            ${l.tip ? `
+              <div class="p-2.5 bg-ochre-50 border border-ochre-200 rounded-xl text-xs text-ochre-800 flex items-start gap-2 font-medium">
+                <span>💡</span>
+                <span>${l.tip}</span>
+              </div>
+            ` : ''}
+          </div>
+        `;
+
+        if (l.quiz) {
+          html += renderDetailQuizBox(l.quiz, 'ochre', '國學常識測驗');
+        }
+      }
+
+      contentEl.innerHTML = html;
+      modal.classList.remove("hidden");
+      document.body.style.overflow = "hidden";
+    }
+
+    function renderDetailQuizBox(quiz, themeColor, categoryLabel) {
+      const qUid = `dq_${Math.random().toString(36).substr(2, 6)}`;
+      return `
+        <div class="bg-white rounded-xl border border-paper-300 p-4 space-y-3 shadow-xs">
+          <div class="flex items-center justify-between border-b border-paper-200 pb-2">
+            <span class="text-xs font-bold text-${themeColor}-800 font-chinese-serif">【${categoryLabel}】${quiz.type || '實戰演練'}</span>
+            <span id="dt-status-${qUid}" class="text-[11px] text-ink-600 bg-paper-100 px-2 py-0.5 rounded font-medium">請點選答案進行作答</span>
+          </div>
+
+          <p class="text-xs sm:text-sm font-bold text-ink-900 leading-relaxed">${quiz.q}</p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+            ${(quiz.options || []).map((opt, optIdx) => {
+              const optLetter = String.fromCharCode(65 + optIdx);
+              return `
+                <button onclick="handleDetailQuizClick('${qUid}', ${optIdx}, ${quiz.ans})" class="dt-opt-btn-${qUid} p-2.5 bg-paper-50 hover:bg-paper-100 border border-paper-300 rounded-xl text-left font-medium transition-colors flex items-center gap-2 tap-scale">
+                  <span class="w-5 h-5 rounded-full bg-paper-200 text-ink-800 flex items-center justify-center font-bold text-[11px]">${optLetter}</span>
+                  <span class="flex-1">${opt}</span>
+                </button>
+              `;
+            }).join('')}
+          </div>
+
+          <!-- 題目深度精析：預設隱藏 (hidden)，點選選項作答後才展開 -->
+          <div id="dt-exp-${qUid}" class="hidden p-2.5 bg-paper-100 rounded-xl border border-paper-200 text-xs text-ink-800 space-y-1">
+            <div class="font-bold text-${themeColor}-800 flex items-center gap-1">
+              <span>💡</span> <span>題目深度精析：</span>
+            </div>
+            <p class="text-ink-700 leading-relaxed">${quiz.exp || '正解為 ' + String.fromCharCode(65 + (quiz.ans || 0))}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    function handleDetailQuizClick(uid, selectedIdx, correctIdx) {
+      const buttons = document.querySelectorAll(`.dt-opt-btn-${uid}`);
+      const statusBadge = document.getElementById(`dt-status-${uid}`);
+      const expBox = document.getElementById(`dt-exp-${uid}`);
+
+      const isCorrect = (selectedIdx === correctIdx);
+      if (statusBadge) {
+        if (isCorrect) {
+          statusBadge.className = "text-[11px] text-emerald-800 bg-emerald-100 font-bold px-2 py-0.5 rounded";
+          statusBadge.textContent = "✓ 答對了！";
+        } else {
+          statusBadge.className = "text-[11px] text-vermilion-700 bg-vermilion-100 font-bold px-2 py-0.5 rounded";
+          statusBadge.textContent = `✕ 答錯了，正解為 ${String.fromCharCode(65 + correctIdx)}`;
+        }
+      }
+
+      buttons.forEach((btn, idx) => {
+        btn.disabled = true;
+        btn.classList.remove("bg-paper-50", "hover:bg-paper-100", "border-bamboo-700", "bg-bamboo-100", "text-bamboo-800", "border-vermilion-600", "bg-vermilion-50", "text-vermilion-700");
+        if (idx === correctIdx) {
+          btn.classList.add("border-bamboo-700", "bg-bamboo-100", "text-bamboo-800", "font-bold");
+        } else if (idx === selectedIdx) {
+          btn.classList.add("border-vermilion-600", "bg-vermilion-50", "text-vermilion-700");
+        } else {
+          btn.classList.add("bg-paper-50", "opacity-50");
+        }
+      });
+
+      // 作答後展開解析
+      if (expBox) {
+        expBox.classList.remove("hidden");
+      }
+    }
+
+    function closeLibraryDetailModal() {
+      const modal = document.getElementById("detail-modal");
+      modal.classList.add("hidden");
+      document.body.style.overflow = "";
     }
 
     /* ==========================================================================
@@ -1296,6 +1635,7 @@
       if (e.key === 'Escape') {
         closeExamModal();
         closeResultModalAndReview();
+        closeLibraryDetailModal();
       }
     });
 
